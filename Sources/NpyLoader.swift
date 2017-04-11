@@ -71,6 +71,8 @@ public enum NpyLoaderError: Error {
 private let MAGIC_PREFIX = "\u{93}NUMPY"
 
 private enum NumpyDataType: String {
+    case bool = "b1"
+    
     case uint8 = "u1"
     case uint16 = "u2"
     case uint32 = "u4"
@@ -85,7 +87,8 @@ private enum NumpyDataType: String {
     case float64 = "f8"
     
     static var all: [NumpyDataType] {
-        return [.uint8, .uint16, .uint32, .uint64,
+        return [.bool,
+                .uint8, .uint16, .uint32, .uint64,
                 .int8, .int16, .int32, .int64,
                 .float32, .float64]
     }
@@ -160,6 +163,8 @@ private func parseHeader(_ data: Data) throws -> NumpyHeader {
 
 private func checkType<T>(type: T.Type, dataType: NumpyDataType) throws {
     switch (type, dataType) {
+    case (is Bool.Type, .bool):
+        break
     case (is UInt.Type, .uint8), (is UInt.Type, .uint16), (is UInt.Type, .uint32), (is UInt.Type, .uint64):
         break
     case (is UInt8.Type, .uint8):
@@ -192,6 +197,9 @@ private func checkType<T>(type: T.Type, dataType: NumpyDataType) throws {
 private func loadElements<T>(data: Data, count: Int, dataType: NumpyDataType, isLittleEndian: Bool) -> [T] {
     
     switch dataType {
+    case .bool:
+        let uints: [UInt8] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
+        return uints.map { $0 != 0 } as! [T]
     case .uint8:
         let uints: [UInt8] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
         if T.self is UInt.Type {

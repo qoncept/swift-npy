@@ -3,6 +3,8 @@ public protocol DataType {
     
 }
 
+extension Bool: DataType {}
+
 extension UInt: DataType {}
 extension UInt8: DataType {}
 extension UInt16: DataType {}
