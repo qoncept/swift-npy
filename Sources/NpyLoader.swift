@@ -55,43 +55,36 @@ public func load<T: DataType>(data: Data) throws -> (shape: [Int], elements: [T]
     let elemCount = header.shape.reduce(1, *)
     let elemData = rest.subdata(in: headerLen..<rest.count)
     
-    let elemPtr = UnsafeMutablePointer<T>.allocate(capacity: elemCount)
-    defer { elemPtr.deallocate(capacity: elemCount) }
+    let elements: [T]
     
     switch (header.dataType, header.isLittleEndian) {
     case (.float32, true):
-        let elements = elemData.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+        elements = elemData.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
             ptr.withMemoryRebound(to: Float32.self, capacity: elemCount) { ptr2 in
                 (0..<elemCount).map { Float(ptr2.advanced(by: $0).pointee) }
             }
-        }
-        memcpy(elemPtr, elements, elemCount*MemoryLayout<Float>.size)
+        } as! [T]
     case (.float32, false):
         let uints = elemData.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
             ptr.withMemoryRebound(to: UInt32.self, capacity: elemCount) { ptr2 in
                 (0..<elemCount).map { UInt32(bigEndian: ptr2.advanced(by: $0).pointee) }
             }
         }
-        let elements = uints.map { Float(Float32(bitPattern: $0)) }
-        memcpy(elemPtr, elements, elemCount*MemoryLayout<Float>.size)
+        elements = uints.map { Float(Float32(bitPattern: $0)) } as! [T]
     case (.float64, true):
-        let elements = elemData.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+        elements = elemData.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
             ptr.withMemoryRebound(to: Float64.self, capacity: elemCount) { ptr2 in
                 (0..<elemCount).map { Double(ptr2.advanced(by: $0).pointee) }
             }
-        }
-        memcpy(elemPtr, elements, elemCount*MemoryLayout<Double>.size)
+        } as! [T]
     case (.float64, false):
         let uints = elemData.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
             ptr.withMemoryRebound(to: UInt64.self, capacity: elemCount) { ptr2 in
                 (0..<elemCount).map { UInt64(bigEndian: ptr2.advanced(by: $0).pointee) }
             }
         }
-        let elements = uints.map { Double(Float64(bitPattern: $0)) }
-        memcpy(elemPtr, elements, elemCount*MemoryLayout<Double>.size)
+        elements = uints.map { Double(Float64(bitPattern: $0)) } as! [T]
     }
-    
-    let elements = [T](UnsafeBufferPointer(start: elemPtr, count: elemCount))
     
     return (header.shape, elements)
 }
