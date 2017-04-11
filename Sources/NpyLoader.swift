@@ -105,7 +105,7 @@ private let MAGIC_PREFIX = "\u{93}NUMPY"
 
 private struct NumpyHeader {
     let shape: [Int]
-    let dataType: DataType
+    let dataType: NumpyDataType
     let isLittleEndian: Bool
     let isFortranOrder: Bool
     let descr: String
@@ -119,7 +119,7 @@ private func parseHeader(_ data: Data) throws -> NumpyHeader {
     
     let descr: String
     let isLittleEndian: Bool
-    let dataType: DataType
+    let dataType: NumpyDataType
     let isFortranOrder: Bool
     do {
         let separate = str.components(separatedBy: CharacterSet(charactersIn: ", ")).filter { !$0.isEmpty }
@@ -131,7 +131,7 @@ private func parseHeader(_ data: Data) throws -> NumpyHeader {
         
         isLittleEndian = descr.contains("<") || descr.contains("|")
         
-        guard let dt = DataType.all.filter({ descr.contains($0.rawValue) }).first else {
+        guard let dt = NumpyDataType.all.filter({ descr.contains($0.rawValue) }).first else {
             fatalError("Unsupported dtype: \(descr)")
         }
         dataType = dt
@@ -174,7 +174,7 @@ private func parseHeader(_ data: Data) throws -> NumpyHeader {
                        descr: descr)
 }
 
-private func checkType<T>(type: T.Type, dataType: DataType) throws {
+private func checkType<T>(type: T.Type, dataType: NumpyDataType) throws {
     switch (type, dataType) {
     case (is Float.Type, .float32):
         break
@@ -185,11 +185,11 @@ private func checkType<T>(type: T.Type, dataType: DataType) throws {
     }
 }
 
-private enum DataType: String {
+private enum NumpyDataType: String {
     case float32 = "f4"
     case float64 = "f8"
     
-    static var all: [DataType] {
+    static var all: [NumpyDataType] {
         return [.float32, .float64]
     }
 }
