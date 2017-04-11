@@ -55,36 +55,10 @@ public func load<T: DataType>(data: Data) throws -> (shape: [Int], elements: [T]
     let elemCount = header.shape.reduce(1, *)
     let elemData = rest.subdata(in: headerLen..<rest.count)
     
-    let elements: [T]
-    
-    switch (header.dataType, header.isLittleEndian) {
-    case (.float32, true):
-        elements = elemData.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
-            ptr.withMemoryRebound(to: Float32.self, capacity: elemCount) { ptr2 in
-                (0..<elemCount).map { Float(ptr2.advanced(by: $0).pointee) }
-            }
-        } as! [T]
-    case (.float32, false):
-        let uints = elemData.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
-            ptr.withMemoryRebound(to: UInt32.self, capacity: elemCount) { ptr2 in
-                (0..<elemCount).map { UInt32(bigEndian: ptr2.advanced(by: $0).pointee) }
-            }
-        }
-        elements = uints.map { Float(Float32(bitPattern: $0)) } as! [T]
-    case (.float64, true):
-        elements = elemData.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
-            ptr.withMemoryRebound(to: Float64.self, capacity: elemCount) { ptr2 in
-                (0..<elemCount).map { Double(ptr2.advanced(by: $0).pointee) }
-            }
-        } as! [T]
-    case (.float64, false):
-        let uints = elemData.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
-            ptr.withMemoryRebound(to: UInt64.self, capacity: elemCount) { ptr2 in
-                (0..<elemCount).map { UInt64(bigEndian: ptr2.advanced(by: $0).pointee) }
-            }
-        }
-        elements = uints.map { Double(Float64(bitPattern: $0)) } as! [T]
-    }
+    let elements: [T] = loadElements(data: elemData,
+                                     count: elemCount,
+                                     dataType: header.dataType,
+                                     isLittleEndian: header.isLittleEndian)
     
     return (header.shape, elements)
 }
@@ -95,6 +69,27 @@ public enum NpyLoaderError: Error {
 }
 
 private let MAGIC_PREFIX = "\u{93}NUMPY"
+
+private enum NumpyDataType: String {
+    case uint8 = "u1"
+    case uint16 = "u2"
+    case uint32 = "u4"
+    case uint64 = "u8"
+    
+    case int8 = "i1"
+    case int16 = "i2"
+    case int32 = "i4"
+    case int64 = "i8"
+    
+    case float32 = "f4"
+    case float64 = "f8"
+    
+    static var all: [NumpyDataType] {
+        return [.uint8, .uint16, .uint32, .uint64,
+                .int8, .int16, .int32, .int64,
+                .float32, .float64]
+    }
+}
 
 private struct NumpyHeader {
     let shape: [Int]
@@ -169,6 +164,26 @@ private func parseHeader(_ data: Data) throws -> NumpyHeader {
 
 private func checkType<T>(type: T.Type, dataType: NumpyDataType) throws {
     switch (type, dataType) {
+    case (is UInt.Type, .uint8), (is UInt.Type, .uint16), (is UInt.Type, .uint32), (is UInt.Type, .uint64):
+        break
+    case (is UInt8.Type, .uint8):
+        break
+    case (is UInt16.Type, .uint16):
+        break
+    case (is UInt32.Type, .uint32):
+        break
+    case (is UInt64.Type, .uint64):
+        break
+    case (is Int.Type, .int8), (is Int.Type, .int16), (is Int.Type, .int32), (is Int.Type, .int64):
+        break
+    case (is Int8.Type, .int8):
+        break
+    case (is Int16.Type, .int16):
+        break
+    case (is Int32.Type, .int32):
+        break
+    case (is Int64.Type, .int64):
+        break
     case (is Float.Type, .float32):
         break
     case (is Double.Type, .float64):
@@ -178,11 +193,119 @@ private func checkType<T>(type: T.Type, dataType: NumpyDataType) throws {
     }
 }
 
-private enum NumpyDataType: String {
-    case float32 = "f4"
-    case float64 = "f8"
+private func loadElements<T>(data: Data, count: Int, dataType: NumpyDataType, isLittleEndian: Bool) -> [T] {
     
-    static var all: [NumpyDataType] {
-        return [.float32, .float64]
+    switch dataType {
+    case .uint8:
+        let uints: [UInt8] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
+        if T.self is UInt.Type {
+            return uints.map { UInt($0) } as! [T]
+        } else {
+            return uints as! [T]
+        }
+    case .uint16:
+        let uints: [UInt16] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
+        if T.self is UInt.Type {
+            return uints.map { UInt($0) } as! [T]
+        } else {
+            return uints as! [T]
+        }
+    case .uint32:
+        let uints: [UInt32] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
+        if T.self is UInt.Type {
+            return uints.map { UInt($0) } as! [T]
+        } else {
+            return uints as! [T]
+        }
+    case .uint64:
+        let uints: [UInt64] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
+        if T.self is UInt.Type {
+            return uints.map { UInt($0) } as! [T]
+        } else {
+            return uints as! [T]
+        }
+    case .int8:
+        let uints: [UInt8] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
+        if T.self is Int.Type {
+            return uints.map { Int(Int8(bitPattern: $0)) } as! [T]
+        } else {
+            return uints.map { Int8(bitPattern: $0) } as! [T]
+        }
+    case .int16:
+        let uints: [UInt16] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
+        if T.self is Int.Type {
+            return uints.map { Int(Int16(bitPattern: $0)) } as! [T]
+        } else {
+            return uints.map { Int16(bitPattern: $0) } as! [T]
+        }
+    case .int32:
+        let uints: [UInt32] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
+        if T.self is Int.Type {
+            return uints.map { Int(Int32(bitPattern: $0)) } as! [T]
+        } else {
+            return uints.map { Int32(bitPattern: $0) } as! [T]
+        }
+    case .int64:
+        let uints: [UInt64] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
+        if T.self is Int.Type {
+            return uints.map { Int(Int64(bitPattern: $0)) } as! [T]
+        } else {
+            return uints.map { Int64(bitPattern: $0) } as! [T]
+        }
+    case .float32:
+        let uints: [UInt32] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
+        return uints.map { Float(bitPattern: $0) } as! [T]
+    case .float64:
+        let uints: [UInt64] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
+        return uints.map { Double(bitPattern: $0) } as! [T]
     }
 }
+
+
+protocol UIntProtocol {}
+extension UInt8: UIntProtocol {}
+extension UInt16: UIntProtocol {}
+extension UInt32: UIntProtocol {}
+extension UInt64: UIntProtocol {}
+
+private func loadUInts<T: UIntProtocol>(data: Data, count: Int, isLittleEndian: Bool) -> [T] {
+    if isLittleEndian || T.self is UInt8.Type {
+        let uints = data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+            ptr.withMemoryRebound(to: T.self, capacity: count) { ptr2 in
+                [T](UnsafeBufferPointer(start: ptr2, count: count))
+            }
+        }
+        return uints
+    } else {
+        switch T.self {
+        case is UInt16.Type:
+            return data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+                ptr.withMemoryRebound(to: UInt16.self, capacity: count) { ptr2 in
+                    (0..<count).map { UInt16(bigEndian: ptr2.advanced(by: $0).pointee) }
+                } as! [T]
+            }
+        case is UInt32.Type:
+            return data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+                ptr.withMemoryRebound(to: UInt32.self, capacity: count) { ptr2 in
+                    (0..<count).map { UInt32(bigEndian: ptr2.advanced(by: $0).pointee) }
+                } as! [T]
+            }
+        case is UInt64.Type:
+            return data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+                ptr.withMemoryRebound(to: UInt64.self, capacity: count) { ptr2 in
+                    (0..<count).map { UInt64(bigEndian: ptr2.advanced(by: $0).pointee) }
+                } as! [T]
+            }
+        default:
+            fatalError()
+        }
+    }
+}
+
+
+
+
+
+
+
+
