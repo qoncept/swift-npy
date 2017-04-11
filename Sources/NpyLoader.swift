@@ -1,12 +1,12 @@
 
 import Foundation
 
-public func load<T>(contentsOf url: URL) throws -> (shape: [Int], elements: [T]) {
+public func load<T: DataType>(contentsOf url: URL) throws -> (shape: [Int], elements: [T]) {
     let data = try Data(contentsOf: url)
     return try load(npyData: data)
 }
 
-public func load<T>(npyData: Data) throws -> (shape: [Int], elements: [T]) {
+public func load<T: DataType>(npyData: Data) throws -> (shape: [Int], elements: [T]) {
     guard let magic = String(data: npyData.subdata(in: 0..<6), encoding: .ascii) else {
         throw NumpyArrayLoaderError.ParseFailed(message: "Can't parse prefix")
     }
