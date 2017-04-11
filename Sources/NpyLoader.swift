@@ -1,12 +1,12 @@
 
 import Foundation
 
-public func load<T: DataType>(contentsOf url: URL) throws -> (shape: [Int], elements: [T]) {
+public func load<T: DataType>(contentsOf url: URL) throws -> NpyData<T> {
     let data = try Data(contentsOf: url)
     return try load(data: data)
 }
 
-public func load<T: DataType>(data: Data) throws -> (shape: [Int], elements: [T]) {
+public func load<T: DataType>(data: Data) throws -> NpyData<T> {
     guard let magic = String(data: data.subdata(in: 0..<6), encoding: .ascii) else {
         throw NpyLoaderError.ParseFailed(message: "Can't parse prefix")
     }
@@ -60,7 +60,7 @@ public func load<T: DataType>(data: Data) throws -> (shape: [Int], elements: [T]
                                      dataType: header.dataType,
                                      isLittleEndian: header.isLittleEndian)
     
-    return (header.shape, elements)
+    return NpyData(shape: header.shape, elements: elements, isFortrnOrder: header.isFortranOrder)
 }
 
 public enum NpyLoaderError: Error {
@@ -129,10 +129,6 @@ private func parseHeader(_ data: Data) throws -> NumpyHeader {
         }
         
         isFortranOrder = separate[fortranIndex+1].contains("True")
-        
-        guard !isFortranOrder else {
-            fatalError("\"fortran_order\" must be False.")
-        }
     }
     
     var shape: [Int] = []
