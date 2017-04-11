@@ -3,23 +3,23 @@ import Foundation
 
 public func load<T: DataType>(contentsOf url: URL) throws -> (shape: [Int], elements: [T]) {
     let data = try Data(contentsOf: url)
-    return try load(npyData: data)
+    return try load(data: data)
 }
 
-public func load<T: DataType>(npyData: Data) throws -> (shape: [Int], elements: [T]) {
-    guard let magic = String(data: npyData.subdata(in: 0..<6), encoding: .ascii) else {
+public func load<T: DataType>(data: Data) throws -> (shape: [Int], elements: [T]) {
+    guard let magic = String(data: data.subdata(in: 0..<6), encoding: .ascii) else {
         throw NumpyArrayLoaderError.ParseFailed(message: "Can't parse prefix")
     }
     guard magic == MAGIC_PREFIX else {
         throw NumpyArrayLoaderError.ParseFailed(message: "Invalid prefix: \(magic)")
     }
     
-    let major = npyData[6]
+    let major = data[6]
     guard major == 1 || major == 2 else {
         throw NumpyArrayLoaderError.ParseFailed(message: "Invalid major version: \(major)")
     }
     
-    let minor = npyData[7]
+    let minor = data[7]
     guard minor == 0 else {
         throw NumpyArrayLoaderError.ParseFailed(message: "Invalid minor version: \(minor)")
     }
@@ -28,21 +28,21 @@ public func load<T: DataType>(npyData: Data) throws -> (shape: [Int], elements: 
     let rest: Data
     switch major {
     case 1:
-        let tmp = Data(npyData[8...9]).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+        let tmp = Data(data[8...9]).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
             ptr.withMemoryRebound(to: UInt16.self, capacity: 1) {
                 UInt16(littleEndian: $0.pointee)
             }
         }
         headerLen = Int(tmp)
-        rest = npyData.subdata(in: 10..<npyData.count)
+        rest = data.subdata(in: 10..<data.count)
     case 2:
-        let tmp = Data(npyData[8...11]).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+        let tmp = Data(data[8...11]).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
             ptr.withMemoryRebound(to: UInt32.self, capacity: 1) {
                 UInt32(littleEndian: $0.pointee)
             }
         }
         headerLen = Int(tmp)
-        rest = npyData.subdata(in: 12..<npyData.count)
+        rest = data.subdata(in: 12..<data.count)
     default:
         fatalError("Never happens.")
     }

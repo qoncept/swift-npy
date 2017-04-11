@@ -5,12 +5,12 @@ class NpyLoaderTests: XCTestCase {
     
     func testLoadSuccess() {
         do {
-            let (shape, elements): ([Int], [Float]) = try! load(npyData: f4_shape_10_elements_0_9)
+            let (shape, elements): ([Int], [Float]) = try! load(data: f4_shape_10_elements_0_9)
             XCTAssertEqual(shape, [10])
             XCTAssertEqual(elements, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
         }
         do {
-            let (shape, elements): ([Int], [Double]) = try! load(npyData: f8_shape_2_3_elements_0_5)
+            let (shape, elements): ([Int], [Double]) = try! load(data: f8_shape_2_3_elements_0_5)
             XCTAssertEqual(shape, [2, 3])
             XCTAssertEqual(elements, [0, 1, 2, 3, 4, 5])
         }
@@ -19,13 +19,13 @@ class NpyLoaderTests: XCTestCase {
     func testLoadFailure() {
         do {
             let loader = {
-                let (_, _): ([Int], [Double]) = try load(npyData: f4_shape_10_elements_0_9)
+                let (_, _): ([Int], [Double]) = try load(data: f4_shape_10_elements_0_9)
             }
             XCTAssertThrowsError(try loader())
         }
         do {
             let loader = {
-                let (_, _): ([Int], [Float]) = try load(npyData: f8_shape_2_3_elements_0_5)
+                let (_, _): ([Int], [Float]) = try load(data: f8_shape_2_3_elements_0_5)
             }
             XCTAssertThrowsError(try loader())
         }
