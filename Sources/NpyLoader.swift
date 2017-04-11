@@ -8,20 +8,20 @@ public func load<T: DataType>(contentsOf url: URL) throws -> (shape: [Int], elem
 
 public func load<T: DataType>(data: Data) throws -> (shape: [Int], elements: [T]) {
     guard let magic = String(data: data.subdata(in: 0..<6), encoding: .ascii) else {
-        throw NumpyArrayLoaderError.ParseFailed(message: "Can't parse prefix")
+        throw NpyLoaderError.ParseFailed(message: "Can't parse prefix")
     }
     guard magic == MAGIC_PREFIX else {
-        throw NumpyArrayLoaderError.ParseFailed(message: "Invalid prefix: \(magic)")
+        throw NpyLoaderError.ParseFailed(message: "Invalid prefix: \(magic)")
     }
     
     let major = data[6]
     guard major == 1 || major == 2 else {
-        throw NumpyArrayLoaderError.ParseFailed(message: "Invalid major version: \(major)")
+        throw NpyLoaderError.ParseFailed(message: "Invalid major version: \(major)")
     }
     
     let minor = data[7]
     guard minor == 0 else {
-        throw NumpyArrayLoaderError.ParseFailed(message: "Invalid minor version: \(minor)")
+        throw NpyLoaderError.ParseFailed(message: "Invalid minor version: \(minor)")
     }
     
     let headerLen: Int
@@ -89,7 +89,7 @@ public func load<T: DataType>(data: Data) throws -> (shape: [Int], elements: [T]
     return (header.shape, elements)
 }
 
-public enum NumpyArrayLoaderError: Error {
+public enum NpyLoaderError: Error {
     case ParseFailed(message: String)
     case TypeMismatch(message: String)
 }
@@ -107,7 +107,7 @@ private struct NumpyHeader {
 private func parseHeader(_ data: Data) throws -> NumpyHeader {
     
     guard let str = String(data: data, encoding: .ascii) else {
-        throw NumpyArrayLoaderError.ParseFailed(message: "Failed to load header")
+        throw NpyLoaderError.ParseFailed(message: "Failed to load header")
     }
     
     let descr: String
@@ -118,7 +118,7 @@ private func parseHeader(_ data: Data) throws -> NumpyHeader {
         let separate = str.components(separatedBy: CharacterSet(charactersIn: ", ")).filter { !$0.isEmpty }
         
         guard let descrIndex = separate.index(where: { $0.contains("descr") }) else {
-            throw NumpyArrayLoaderError.ParseFailed(message: "Header does not contain the key 'descr'")
+            throw NpyLoaderError.ParseFailed(message: "Header does not contain the key 'descr'")
         }
         descr = separate[descrIndex + 1]
         
@@ -130,7 +130,7 @@ private func parseHeader(_ data: Data) throws -> NumpyHeader {
         dataType = dt
         
         guard let fortranIndex = separate.index(where: { $0.contains("fortran_order") }) else {
-            throw NumpyArrayLoaderError.ParseFailed(message: "Header does not contain the key 'fortran_order'")
+            throw NpyLoaderError.ParseFailed(message: "Header does not contain the key 'fortran_order'")
         }
         
         isFortranOrder = separate[fortranIndex+1].contains("True")
@@ -144,7 +144,7 @@ private func parseHeader(_ data: Data) throws -> NumpyHeader {
     do {
         guard let left = str.range(of: "("),
             let right = str.range(of: ")") else {
-                throw NumpyArrayLoaderError.ParseFailed(message: "Shape not found in header.")
+                throw NpyLoaderError.ParseFailed(message: "Shape not found in header.")
         }
         
         let substr = str.substring(with: left.upperBound..<right.lowerBound)
@@ -154,7 +154,7 @@ private func parseHeader(_ data: Data) throws -> NumpyHeader {
             .filter { !$0.isEmpty }
         for s in strs {
             guard let i = Int(s) else {
-                throw NumpyArrayLoaderError.ParseFailed(message: "Shape contains invalid integer: \(s)")
+                throw NpyLoaderError.ParseFailed(message: "Shape contains invalid integer: \(s)")
             }
             shape.append(i)
         }
@@ -174,7 +174,7 @@ private func checkType<T>(type: T.Type, dataType: NumpyDataType) throws {
     case (is Double.Type, .float64):
         break
     default:
-        throw NumpyArrayLoaderError.TypeMismatch(message: "\(type) and \(dataType) are incompatible.")
+        throw NpyLoaderError.TypeMismatch(message: "\(type) and \(dataType) are incompatible.")
     }
 }
 
