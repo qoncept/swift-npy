@@ -1,7 +1,7 @@
 import XCTest
-@testable import NumpyArrayLoader
+@testable import NpyLoader
 
-class NumpyArrayLoaderTests: XCTestCase {
+class NpyLoaderTests: XCTestCase {
     
     func testLoadSuccess() {
         do {
