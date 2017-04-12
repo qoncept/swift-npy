@@ -60,7 +60,7 @@ public func load<T: DataType>(data: Data) throws -> NpyData<T> {
                                      dataType: header.dataType,
                                      isLittleEndian: header.isLittleEndian)
     
-    return NpyData(shape: header.shape, elements: elements, isFortrnOrder: header.isFortranOrder)
+    return NpyData(shape: header.shape, elements: elements, isFortranOrder: header.isFortranOrder)
 }
 
 public enum NpyLoaderError: Error {
