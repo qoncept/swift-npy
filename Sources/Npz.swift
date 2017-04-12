@@ -2,7 +2,11 @@
 import Foundation
 
 public struct Npz {
-    let dict: [String: Data]
+    private let dict: [String: Data]
+    
+    init(dict: [String: Data]) {
+        self.dict = dict
+    }
     
     public var keys: [String] {
         return dict.keys.map { $0.replacingOccurrences(of: ".npy", with: "") }
