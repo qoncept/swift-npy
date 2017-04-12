@@ -13,7 +13,7 @@ public struct Npy {
         return shape.reduce(1, *)
     }
     
-    public var dataType: NumpyDataType {
+    public var dataType: DataType {
         return header.dataType
     }
     
@@ -137,7 +137,7 @@ public struct Npy {
 
 struct NpyHeader {
     let shape: [Int]
-    let dataType: NumpyDataType
+    let dataType: DataType
     let isLittleEndian: Bool
     let isFortranOrder: Bool
     let descr: String

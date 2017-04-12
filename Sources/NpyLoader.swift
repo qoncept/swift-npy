@@ -70,7 +70,7 @@ private func parseHeader(_ data: Data) throws -> NpyHeader {
     
     let descr: String
     let isLittleEndian: Bool
-    let dataType: NumpyDataType
+    let dataType: DataType
     let isFortranOrder: Bool
     do {
         let separate = str.components(separatedBy: CharacterSet(charactersIn: ", ")).filter { !$0.isEmpty }
@@ -82,7 +82,7 @@ private func parseHeader(_ data: Data) throws -> NpyHeader {
         
         isLittleEndian = descr.contains("<") || descr.contains("|")
         
-        guard let dt = NumpyDataType.all.filter({ descr.contains($0.rawValue) }).first else {
+        guard let dt = DataType.all.filter({ descr.contains($0.rawValue) }).first else {
             fatalError("Unsupported dtype: \(descr)")
         }
         dataType = dt

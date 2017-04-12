@@ -1,5 +1,5 @@
 
-public enum NumpyDataType: String {
+public enum DataType: String {
     case bool = "b1"
     
     case uint8 = "u1"
@@ -15,7 +15,7 @@ public enum NumpyDataType: String {
     case float32 = "f4"
     case float64 = "f8"
     
-    static var all: [NumpyDataType] {
+    static var all: [DataType] {
         return [.bool,
                 .uint8, .uint16, .uint32, .uint64,
                 .int8, .int16, .int32, .int64,
