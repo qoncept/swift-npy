@@ -1,4 +1,4 @@
-public struct NpyData<T: DataType> {
+public struct Npy<T: DataType> {
     public let shape: [Int]
     public let elements: [T]
     public let isFortranOrder: Bool

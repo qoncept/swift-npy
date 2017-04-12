@@ -5,7 +5,7 @@ class NpyLoaderTests: XCTestCase {
     
     func testLoadSuccessBool() {
         do {
-            let npyData: NpyData<Bool> = try! load(data: b1_shape_2_elements_true_false)
+            let npyData: Npy<Bool> = try! load(data: b1_shape_2_elements_true_false)
             XCTAssertEqual(npyData.shape, [2])
             XCTAssertEqual(npyData.elements, [true, false])
         }
@@ -13,42 +13,42 @@ class NpyLoaderTests: XCTestCase {
     
     func testLoadSuccessUInt() {
         do {
-            let npyData: NpyData<UInt8> = try! load(data: u1_shape_2_4_elements_0_7_big)
+            let npyData: Npy<UInt8> = try! load(data: u1_shape_2_4_elements_0_7_big)
             XCTAssertEqual(npyData.shape, [2, 4])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5, 6, 7])
         }
         do {
-            let npyData: NpyData<UInt> = try! load(data: u1_shape_2_4_elements_0_7_big)
+            let npyData: Npy<UInt> = try! load(data: u1_shape_2_4_elements_0_7_big)
             XCTAssertEqual(npyData.shape, [2, 4])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5, 6, 7])
         }
         do {
-            let npyData: NpyData<UInt16> = try! load(data: u2_shape_3_3_eye)
+            let npyData: Npy<UInt16> = try! load(data: u2_shape_3_3_eye)
             XCTAssertEqual(npyData.shape, [3, 3])
             XCTAssertEqual(npyData.elements, [1, 0, 0, 0, 1, 0, 0, 0, 1])
         }
         do {
-            let npyData: NpyData<UInt> = try! load(data: u2_shape_3_3_eye)
+            let npyData: Npy<UInt> = try! load(data: u2_shape_3_3_eye)
             XCTAssertEqual(npyData.shape, [3, 3])
             XCTAssertEqual(npyData.elements, [1, 0, 0, 0, 1, 0, 0, 0, 1])
         }
         do {
-            let npyData: NpyData<UInt32> = try! load(data: u4_shape_3_3_elements_0_8_big)
+            let npyData: Npy<UInt32> = try! load(data: u4_shape_3_3_elements_0_8_big)
             XCTAssertEqual(npyData.shape, [3, 3])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5, 6, 7, 8])
         }
         do {
-            let npyData: NpyData<UInt> = try! load(data: u4_shape_3_3_elements_0_8_big)
+            let npyData: Npy<UInt> = try! load(data: u4_shape_3_3_elements_0_8_big)
             XCTAssertEqual(npyData.shape, [3, 3])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5, 6, 7, 8])
         }
         do {
-            let npyData: NpyData<UInt64> = try! load(data: u8_shape_5_3_elements_0_14)
+            let npyData: Npy<UInt64> = try! load(data: u8_shape_5_3_elements_0_14)
             XCTAssertEqual(npyData.shape, [5, 3])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
         }
         do {
-            let npyData: NpyData<UInt> = try! load(data: u8_shape_5_3_elements_0_14)
+            let npyData: Npy<UInt> = try! load(data: u8_shape_5_3_elements_0_14)
             XCTAssertEqual(npyData.shape, [5, 3])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
         }
@@ -56,42 +56,42 @@ class NpyLoaderTests: XCTestCase {
     
     func testLoadSuccessInt() {
         do {
-            let npyData: NpyData<Int8> = try! load(data: i1_shape_6_elements_0_5)
+            let npyData: Npy<Int8> = try! load(data: i1_shape_6_elements_0_5)
             XCTAssertEqual(npyData.shape, [6])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5])
         }
         do {
-            let npyData: NpyData<Int> = try! load(data: i1_shape_6_elements_0_5)
+            let npyData: Npy<Int> = try! load(data: i1_shape_6_elements_0_5)
             XCTAssertEqual(npyData.shape, [6])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5])
         }
         do {
-            let npyData: NpyData<Int16> = try! load(data: i2_shape_6_elements_0_5)
+            let npyData: Npy<Int16> = try! load(data: i2_shape_6_elements_0_5)
             XCTAssertEqual(npyData.shape, [6])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5])
         }
         do {
-            let npyData: NpyData<Int> = try! load(data: i2_shape_6_elements_0_5)
+            let npyData: Npy<Int> = try! load(data: i2_shape_6_elements_0_5)
             XCTAssertEqual(npyData.shape, [6])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5])
         }
         do {
-            let npyData: NpyData<Int32> = try! load(data: i4_shape_2_2_2_elements_0_7_big)
+            let npyData: Npy<Int32> = try! load(data: i4_shape_2_2_2_elements_0_7_big)
             XCTAssertEqual(npyData.shape, [2, 2, 2])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5, 6, 7])
         }
         do {
-            let npyData: NpyData<Int> = try! load(data: i4_shape_2_2_2_elements_0_7_big)
+            let npyData: Npy<Int> = try! load(data: i4_shape_2_2_2_elements_0_7_big)
             XCTAssertEqual(npyData.shape, [2, 2, 2])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5, 6, 7])
         }
         do {
-            let npyData: NpyData<Int64> = try! load(data: i8_shape_2_3_4_elements_0_23)
+            let npyData: Npy<Int64> = try! load(data: i8_shape_2_3_4_elements_0_23)
             XCTAssertEqual(npyData.shape, [2, 3, 4])
             XCTAssertEqual(npyData.elements, (0..<24).map { $0 })
         }
         do {
-            let npyData: NpyData<Int> = try! load(data: i8_shape_2_3_4_elements_0_23)
+            let npyData: Npy<Int> = try! load(data: i8_shape_2_3_4_elements_0_23)
             XCTAssertEqual(npyData.shape, [2, 3, 4])
             XCTAssertEqual(npyData.elements, (0..<24).map { $0 })
         }
@@ -101,17 +101,17 @@ class NpyLoaderTests: XCTestCase {
     
     func testLoadSuccessFloatDouble() {
         do {
-            let npyData: NpyData<Float> = try! load(data: f4_shape_10_elements_0_9)
+            let npyData: Npy<Float> = try! load(data: f4_shape_10_elements_0_9)
             XCTAssertEqual(npyData.shape, [10])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
         }
         do {
-            let npyData: NpyData<Float> = try! load(data: f4_shape_2_2_2_elements_0_7_big)
+            let npyData: Npy<Float> = try! load(data: f4_shape_2_2_2_elements_0_7_big)
             XCTAssertEqual(npyData.shape, [2, 2, 2])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5, 6, 7])
         }
         do {
-            let npyData: NpyData<Double> = try! load(data: f8_shape_2_3_elements_0_5)
+            let npyData: Npy<Double> = try! load(data: f8_shape_2_3_elements_0_5)
             XCTAssertEqual(npyData.shape, [2, 3])
             XCTAssertEqual(npyData.elements, [0, 1, 2, 3, 4, 5])
         }
@@ -120,13 +120,13 @@ class NpyLoaderTests: XCTestCase {
     func testLoadFailure() {
         do {
             let loader = {
-                let _: NpyData<Double> = try load(data: f4_shape_10_elements_0_9)
+                let _: Npy<Double> = try load(data: f4_shape_10_elements_0_9)
             }
             XCTAssertThrowsError(try loader())
         }
         do {
             let loader = {
-                let _: NpyData<Float> = try load(data: f8_shape_2_3_elements_0_5)
+                let _: Npy<Float> = try load(data: f8_shape_2_3_elements_0_5)
             }
             XCTAssertThrowsError(try loader())
         }

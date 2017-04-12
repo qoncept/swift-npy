@@ -1,14 +1,14 @@
 
 import Foundation
 
-public struct NpzData {
+public struct Npz {
     let dict: [String: Data]
     
     public var keys: [String] {
         return dict.keys.map { $0.replacingOccurrences(of: ".npy", with: "") }
     }
     
-    public func get<T: DataType>(_ key: String) throws -> NpyData<T> {
+    public func get<T: DataType>(_ key: String) throws -> Npy<T> {
         let k: String
         if key.hasSuffix(".npy") {
             k = key

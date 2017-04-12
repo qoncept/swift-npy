@@ -2,7 +2,7 @@
 import Foundation
 import SwiftZip
 
-public func load(data: Data) -> NpzData {
+public func load(data: Data) -> Npz {
     let dict = unzip(data: data)
-    return NpzData(dict: dict)
+    return Npz(dict: dict)
 }

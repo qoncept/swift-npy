@@ -1,12 +1,12 @@
 
 import Foundation
 
-public func load<T: DataType>(contentsOf url: URL) throws -> NpyData<T> {
+public func load<T: DataType>(contentsOf url: URL) throws -> Npy<T> {
     let data = try Data(contentsOf: url)
     return try load(data: data)
 }
 
-public func load<T: DataType>(data: Data) throws -> NpyData<T> {
+public func load<T: DataType>(data: Data) throws -> Npy<T> {
     guard let magic = String(data: data.subdata(in: 0..<6), encoding: .ascii) else {
         throw NpyLoaderError.ParseFailed(message: "Can't parse prefix")
     }
@@ -60,7 +60,7 @@ public func load<T: DataType>(data: Data) throws -> NpyData<T> {
                                      dataType: header.dataType,
                                      isLittleEndian: header.isLittleEndian)
     
-    return NpyData(shape: header.shape, elements: elements, isFortranOrder: header.isFortranOrder)
+    return Npy(shape: header.shape, elements: elements, isFortranOrder: header.isFortranOrder)
 }
 
 public enum NpyLoaderError: Error {

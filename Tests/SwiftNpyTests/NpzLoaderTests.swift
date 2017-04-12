@@ -4,13 +4,13 @@ import XCTest
 
 class NpzLoaderTests: XCTestCase {
     func testLoadNpz() {
-        let npzData: NpzData = load(data: npz)
+        let npzData: Npz = load(data: npz)
         
         XCTAssertEqual(Set(npzData.keys), ["a", "b"])
-        let a: NpyData<Int> = try! npzData.get("a")
+        let a: Npy<Int> = try! npzData.get("a")
         XCTAssertEqual(a.shape, [3])
         XCTAssertEqual(a.elements, [0, 1, 2])
-        let b: NpyData<Int> = try! npzData.get("b")
+        let b: Npy<Int> = try! npzData.get("b")
         XCTAssertEqual(b.shape, [4])
         XCTAssertEqual(b.elements, [0, 1, 2, 3])
     }
