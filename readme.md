@@ -1,7 +1,24 @@
 # SwiftNpy
 Load NumPy array files in Swift
 
+```swift
+let npy = try load(contentsOf: npyUrl)
+let shape = npy.shape
+let elements: [Float] = npy.elements()
+let isFortranOrder = npy.isFortranOrder
+```
+
+```swift
+let npz = try load(contentsOf: npzUrl)
+let npy = npz["name-of-array"]
+```
+
 ## Suppoted format
+`npy`, `npz` files.
+
+### Bool
+`Bool`
+
 ### UInt
 `UInt8`, `UInt16`, `UInt32`, `UInt64`  
 They also can be read as `UInt`
