@@ -30,13 +30,13 @@ public struct Npy {
         self.header = header
     }
     
-    public func getElements() -> [Bool] {
+    public func elements() -> [Bool] {
         precondition(dataType == .bool)
         let uints: [UInt8] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
         return uints.map { $0 != 0 }
     }
     
-    public func getElements() -> [UInt] {
+    public func elements() -> [UInt] {
         switch dataType {
         case .uint8:
             let uints: [UInt8] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
@@ -55,31 +55,31 @@ public struct Npy {
         }
     }
     
-    public func getElements() -> [UInt8] {
+    public func elements() -> [UInt8] {
         precondition(dataType == .uint8)
         let uints: [UInt8] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
         return uints
     }
     
-    public func getElements() -> [UInt16] {
+    public func elements() -> [UInt16] {
         precondition(dataType == .uint16)
         let uints: [UInt16] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
         return uints
     }
     
-    public func getElements() -> [UInt32] {
+    public func elements() -> [UInt32] {
         precondition(dataType == .uint32)
         let uints: [UInt32] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
         return uints
     }
     
-    public func getElements() -> [UInt64] {
+    public func elements() -> [UInt64] {
         precondition(dataType == .uint64)
         let uints: [UInt64] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
         return uints
     }
     
-    public func getElements() -> [Int] {
+    public func elements() -> [Int] {
         switch dataType {
         case .int8:
             let uints: [UInt8] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
@@ -98,37 +98,37 @@ public struct Npy {
         }
     }
     
-    public func getElements() -> [Int8] {
+    public func elements() -> [Int8] {
         precondition(dataType == .int8)
         let uints: [UInt8] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
         return uints.map { Int8(bitPattern: $0) }
     }
     
-    public func getElements() -> [Int16] {
+    public func elements() -> [Int16] {
         precondition(dataType == .int16)
         let uints: [UInt16] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
         return uints.map { Int16(bitPattern: $0) }
     }
     
-    public func getElements() -> [Int32] {
+    public func elements() -> [Int32] {
         precondition(dataType == .int32)
         let uints: [UInt32] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
         return uints.map { Int32(bitPattern: $0) }
     }
     
-    public func getElements() -> [Int64] {
+    public func elements() -> [Int64] {
         precondition(dataType == .int64)
         let uints: [UInt64] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
         return uints.map { Int64(bitPattern: $0) }
     }
     
-    public func getElements() -> [Float] {
+    public func elements() -> [Float] {
         precondition(dataType == .float32)
         let uints: [UInt32] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
         return uints.map { Float(bitPattern: $0) }
     }
     
-    public func getElements() -> [Double] {
+    public func elements() -> [Double] {
         precondition(dataType == .float64)
         let uints: [UInt64] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
         return uints.map { Double(bitPattern: $0) }
