@@ -1,12 +1,12 @@
 
 import Foundation
 
-public func load<T: DataType>(contentsOf url: URL) throws -> Npy<T> {
+public func load(contentsOf url: URL) throws -> Npy {
     let data = try Data(contentsOf: url)
     return try load(data: data)
 }
 
-public func load<T: DataType>(data: Data) throws -> Npy<T> {
+public func load(data: Data) throws -> Npy {
     guard let magic = String(data: data.subdata(in: 0..<6), encoding: .ascii) else {
         throw NpyLoaderError.ParseFailed(message: "Can't parse prefix")
     }
@@ -50,20 +50,9 @@ public func load<T: DataType>(data: Data) throws -> Npy<T> {
     let headerData = rest.subdata(in: 0..<headerLen)
     let header = try parseHeader(headerData)
     
-    try checkType(type: T.self, dataType: header.dataType)
-    
-    let elemCount = header.shape.reduce(1, *)
     let elemData = rest.subdata(in: headerLen..<rest.count)
     
-    let elements: [T] = loadElements(data: elemData,
-                                     count: elemCount,
-                                     dataType: header.dataType,
-                                     isLittleEndian: header.isLittleEndian)
-    
-    return Npy(shape: header.shape,
-               elements: elements,
-               numpyDataType: header.dataType,
-               isFortranOrder: header.isFortranOrder)
+    return Npy(header: header, elementsData: elemData)
 }
 
 public enum NpyLoaderError: Error {
@@ -73,15 +62,7 @@ public enum NpyLoaderError: Error {
 
 private let MAGIC_PREFIX = "\u{93}NUMPY"
 
-private struct NumpyHeader {
-    let shape: [Int]
-    let dataType: NumpyDataType
-    let isLittleEndian: Bool
-    let isFortranOrder: Bool
-    let descr: String
-}
-
-private func parseHeader(_ data: Data) throws -> NumpyHeader {
+private func parseHeader(_ data: Data) throws -> NpyHeader {
     
     guard let str = String(data: data, encoding: .ascii) else {
         throw NpyLoaderError.ParseFailed(message: "Failed to load header")
@@ -133,117 +114,12 @@ private func parseHeader(_ data: Data) throws -> NumpyHeader {
         }
     }
     
-    return NumpyHeader(shape: shape,
+    return NpyHeader(shape: shape,
                        dataType: dataType,
                        isLittleEndian: isLittleEndian,
                        isFortranOrder: isFortranOrder,
                        descr: descr)
 }
-
-private func checkType<T>(type: T.Type, dataType: NumpyDataType) throws {
-    switch (type, dataType) {
-    case (is Bool.Type, .bool):
-        break
-    case (is UInt.Type, .uint8), (is UInt.Type, .uint16), (is UInt.Type, .uint32), (is UInt.Type, .uint64):
-        break
-    case (is UInt8.Type, .uint8):
-        break
-    case (is UInt16.Type, .uint16):
-        break
-    case (is UInt32.Type, .uint32):
-        break
-    case (is UInt64.Type, .uint64):
-        break
-    case (is Int.Type, .int8), (is Int.Type, .int16), (is Int.Type, .int32), (is Int.Type, .int64):
-        break
-    case (is Int8.Type, .int8):
-        break
-    case (is Int16.Type, .int16):
-        break
-    case (is Int32.Type, .int32):
-        break
-    case (is Int64.Type, .int64):
-        break
-    case (is Float.Type, .float32):
-        break
-    case (is Double.Type, .float64):
-        break
-    default:
-        throw NpyLoaderError.TypeMismatch(message: "\(type) and \(dataType) are incompatible.")
-    }
-}
-
-private func loadElements<T>(data: Data, count: Int, dataType: NumpyDataType, isLittleEndian: Bool) -> [T] {
-    
-    switch dataType {
-    case .bool:
-        let uints: [UInt8] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
-        return uints.map { $0 != 0 } as! [T]
-    case .uint8:
-        let uints: [UInt8] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
-        if T.self is UInt.Type {
-            return uints.map { UInt($0) } as! [T]
-        } else {
-            return uints as! [T]
-        }
-    case .uint16:
-        let uints: [UInt16] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
-        if T.self is UInt.Type {
-            return uints.map { UInt($0) } as! [T]
-        } else {
-            return uints as! [T]
-        }
-    case .uint32:
-        let uints: [UInt32] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
-        if T.self is UInt.Type {
-            return uints.map { UInt($0) } as! [T]
-        } else {
-            return uints as! [T]
-        }
-    case .uint64:
-        let uints: [UInt64] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
-        if T.self is UInt.Type {
-            return uints.map { UInt($0) } as! [T]
-        } else {
-            return uints as! [T]
-        }
-    case .int8:
-        let uints: [UInt8] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
-        if T.self is Int.Type {
-            return uints.map { Int(Int8(bitPattern: $0)) } as! [T]
-        } else {
-            return uints.map { Int8(bitPattern: $0) } as! [T]
-        }
-    case .int16:
-        let uints: [UInt16] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
-        if T.self is Int.Type {
-            return uints.map { Int(Int16(bitPattern: $0)) } as! [T]
-        } else {
-            return uints.map { Int16(bitPattern: $0) } as! [T]
-        }
-    case .int32:
-        let uints: [UInt32] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
-        if T.self is Int.Type {
-            return uints.map { Int(Int32(bitPattern: $0)) } as! [T]
-        } else {
-            return uints.map { Int32(bitPattern: $0) } as! [T]
-        }
-    case .int64:
-        let uints: [UInt64] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
-        if T.self is Int.Type {
-            return uints.map { Int(Int64(bitPattern: $0)) } as! [T]
-        } else {
-            return uints.map { Int64(bitPattern: $0) } as! [T]
-        }
-    case .float32:
-        let uints: [UInt32] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
-        return uints.map { Float(bitPattern: $0) } as! [T]
-    case .float64:
-        let uints: [UInt64] = loadUInts(data: data, count: count, isLittleEndian: isLittleEndian)
-        return uints.map { Double(bitPattern: $0) } as! [T]
-    }
-}
-
 
 protocol UIntProtocol {}
 extension UInt8: UIntProtocol {}
@@ -251,7 +127,7 @@ extension UInt16: UIntProtocol {}
 extension UInt32: UIntProtocol {}
 extension UInt64: UIntProtocol {}
 
-private func loadUInts<T: UIntProtocol>(data: Data, count: Int, isLittleEndian: Bool) -> [T] {
+func loadUInts<T: UIntProtocol>(data: Data, count: Int, isLittleEndian: Bool) -> [T] {
     if isLittleEndian || T.self is UInt8.Type {
         let uints = data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
             ptr.withMemoryRebound(to: T.self, capacity: count) { ptr2 in
@@ -265,30 +141,22 @@ private func loadUInts<T: UIntProtocol>(data: Data, count: Int, isLittleEndian: 
             return data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
                 ptr.withMemoryRebound(to: UInt16.self, capacity: count) { ptr2 in
                     (0..<count).map { UInt16(bigEndian: ptr2.advanced(by: $0).pointee) }
-                } as! [T]
+                    } as! [T]
             }
         case is UInt32.Type:
             return data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
                 ptr.withMemoryRebound(to: UInt32.self, capacity: count) { ptr2 in
                     (0..<count).map { UInt32(bigEndian: ptr2.advanced(by: $0).pointee) }
-                } as! [T]
+                    } as! [T]
             }
         case is UInt64.Type:
             return data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
                 ptr.withMemoryRebound(to: UInt64.self, capacity: count) { ptr2 in
                     (0..<count).map { UInt64(bigEndian: ptr2.advanced(by: $0).pointee) }
-                } as! [T]
+                    } as! [T]
             }
         default:
             fatalError()
         }
     }
 }
-
-
-
-
-
-
-
-

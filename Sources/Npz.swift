@@ -12,7 +12,7 @@ public struct Npz {
         return dict.keys.map { $0.replacingOccurrences(of: ".npy", with: "") }
     }
     
-    public func get<T: DataType>(_ key: String) throws -> Npy<T> {
+    public func get(_ key: String) throws -> Npy {
         let k: String
         if key.hasSuffix(".npy") {
             k = key
