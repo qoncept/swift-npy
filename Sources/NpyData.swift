@@ -1,5 +1,11 @@
 public struct NpyData<T: DataType> {
-    let shape: [Int]
-    let elements: [T]
-    let isFortranOrder: Bool
+    public let shape: [Int]
+    public let elements: [T]
+    public let isFortranOrder: Bool
+    
+    init(shape: [Int], elements: [T], isFortranOrder: Bool) {
+        self.shape = shape
+        self.elements = elements
+        self.isFortranOrder = isFortranOrder
+    }
 }
