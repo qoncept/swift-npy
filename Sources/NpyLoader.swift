@@ -121,13 +121,14 @@ private func parseHeader(_ data: Data) throws -> NpyHeader {
                        descr: descr)
 }
 
-protocol UIntProtocol {}
-extension UInt8: UIntProtocol {}
-extension UInt16: UIntProtocol {}
-extension UInt32: UIntProtocol {}
-extension UInt64: UIntProtocol {}
+protocol MultiByteUInt {
+    init(bigEndian: Self)
+}
+extension UInt16: MultiByteUInt {}
+extension UInt32: MultiByteUInt {}
+extension UInt64: MultiByteUInt {}
 
-func loadUInts<T: UIntProtocol>(data: Data, count: Int, isLittleEndian: Bool) -> [T] {
+func loadUInts<T: MultiByteUInt>(data: Data, count: Int, isLittleEndian: Bool) -> [T] {
     if isLittleEndian || T.self is UInt8.Type {
         let uints = data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
             ptr.withMemoryRebound(to: T.self, capacity: count) { ptr2 in
@@ -136,27 +137,17 @@ func loadUInts<T: UIntProtocol>(data: Data, count: Int, isLittleEndian: Bool) ->
         }
         return uints
     } else {
-        switch T.self {
-        case is UInt16.Type:
-            return data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
-                ptr.withMemoryRebound(to: UInt16.self, capacity: count) { ptr2 in
-                    (0..<count).map { UInt16(bigEndian: ptr2.advanced(by: $0).pointee) }
-                    } as! [T]
+        return data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+            ptr.withMemoryRebound(to: T.self, capacity: count) { ptr2 in
+                (0..<count).map { T(bigEndian: ptr2.advanced(by: $0).pointee) }
             }
-        case is UInt32.Type:
-            return data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
-                ptr.withMemoryRebound(to: UInt32.self, capacity: count) { ptr2 in
-                    (0..<count).map { UInt32(bigEndian: ptr2.advanced(by: $0).pointee) }
-                    } as! [T]
-            }
-        case is UInt64.Type:
-            return data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
-                ptr.withMemoryRebound(to: UInt64.self, capacity: count) { ptr2 in
-                    (0..<count).map { UInt64(bigEndian: ptr2.advanced(by: $0).pointee) }
-                    } as! [T]
-            }
-        default:
-            fatalError()
         }
     }
+}
+
+func loadUInt8s(data: Data, count: Int) -> [UInt8] {
+    let uints = data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+        [UInt8](UnsafeBufferPointer(start: ptr, count: count))
+    }
+    return uints
 }

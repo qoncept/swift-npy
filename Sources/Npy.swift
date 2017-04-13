@@ -32,14 +32,14 @@ public struct Npy {
     
     public func elements() -> [Bool] {
         precondition(dataType == .bool)
-        let uints: [UInt8] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
+        let uints = loadUInt8s(data: elementsData, count: elementsCount)
         return uints.map { $0 != 0 }
     }
     
     public func elements() -> [UInt] {
         switch dataType {
         case .uint8:
-            let uints: [UInt8] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
+            let uints = loadUInt8s(data: elementsData, count: elementsCount)
             return uints.map { UInt($0) }
         case .uint16:
             let uints: [UInt16] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
@@ -57,7 +57,7 @@ public struct Npy {
     
     public func elements() -> [UInt8] {
         precondition(dataType == .uint8)
-        let uints: [UInt8] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
+        let uints = loadUInt8s(data: elementsData, count: elementsCount)
         return uints
     }
     
@@ -82,7 +82,7 @@ public struct Npy {
     public func elements() -> [Int] {
         switch dataType {
         case .int8:
-            let uints: [UInt8] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
+            let uints = loadUInt8s(data: elementsData, count: elementsCount)
             return uints.map { Int(Int8(bitPattern: $0)) }
         case .int16:
             let uints: [UInt16] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
@@ -100,7 +100,7 @@ public struct Npy {
     
     public func elements() -> [Int8] {
         precondition(dataType == .int8)
-        let uints: [UInt8] = loadUInts(data: elementsData, count: elementsCount, isLittleEndian: isLittleEndian)
+        let uints = loadUInt8s(data: elementsData, count: elementsCount)
         return uints.map { Int8(bitPattern: $0) }
     }
     
