@@ -15,7 +15,7 @@ public struct Npz {
         }
     }
     
-    public func get(_ key: String) -> Npy? {
+    public subscript(key: String) -> Npy? {
         let k: String
         if key.hasSuffix(".npy") {
             k = key

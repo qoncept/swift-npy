@@ -7,11 +7,11 @@ class NpzLoaderTests: XCTestCase {
         let npzData: Npz = try! load(data: npz)
         
         XCTAssertEqual(Set(npzData.keys), ["a", "b"])
-        let a: Npy = npzData.get("a")!
+        let a: Npy = npzData["a"]!
         XCTAssertEqual(a.shape, [3])
         let aElements: [Int] = a.elements()
         XCTAssertEqual(aElements, [0, 1, 2])
-        let b: Npy = npzData.get("b")!
+        let b: Npy = npzData["b"]!
         XCTAssertEqual(b.shape, [4])
         let bElements: [Int] = b.elements()
         XCTAssertEqual(bElements, [0, 1, 2, 3])
