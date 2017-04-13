@@ -9,7 +9,10 @@ public struct Npz {
     }
     
     public var keys: [String] {
-        return dict.keys.map { $0.replacingOccurrences(of: ".npy", with: "") }
+        return dict.keys.map {
+            precondition($0.hasSuffix(".npy"))
+            return NSString(string: $0).deletingPathExtension
+        }
     }
     
     public func get(_ key: String) -> Npy? {
