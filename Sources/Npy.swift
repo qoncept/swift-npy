@@ -134,11 +134,3 @@ public struct Npy {
         return uints.map { Double(bitPattern: $0) }
     }
 }
-
-struct NpyHeader {
-    let shape: [Int]
-    let dataType: DataType
-    let isLittleEndian: Bool
-    let isFortranOrder: Bool
-    let descr: String
-}
