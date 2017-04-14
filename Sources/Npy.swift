@@ -17,7 +17,7 @@ public struct Npy {
         return header.dataType
     }
     
-    var endian: Endian {
+    public var endian: Endian {
         return header.endian
     }
     
