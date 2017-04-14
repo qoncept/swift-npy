@@ -126,7 +126,8 @@ class NpySaverTests: XCTestCase {
     
     func testFormatF8() {
         let elements: [Double] = [-3, -2, -1, 0, 1, 2]
-        let npy = Npy(shape: [3, 2, 1, 1, 1, 1, 1, 1, 1, 1], elements: elements, endian: .little, isFortranOrder: false)
+        let shape = [3, 2] + [Int](repeating: 1, count: 65535)
+        let npy = Npy(shape: shape, elements: elements, endian: .little, isFortranOrder: false)
         let data = format(npy: npy)
         let npy2: Npy = try! load(data: data)
         

@@ -22,18 +22,24 @@ public func format(npy: Npy) -> Data {
         // v2
         data.append(0x02)
         data.append(0x00)
+        var headerLen = UInt32(header.count)
+        withUnsafePointer(to: &headerLen) { p in
+            p.withMemoryRebound(to: UInt8.self, capacity: MemoryLayout<UInt32>.size) {
+                data.append($0, count: MemoryLayout<UInt32>.size)
+            }
+        }
     } else {
         // v1
         data.append(0x01)
         data.append(0x00)
-    }
-    
-    var headerLen = UInt16(header.count)
-    withUnsafePointer(to: &headerLen) { p in
-        p.withMemoryRebound(to: UInt8.self, capacity: 2) {
-            data.append($0, count: MemoryLayout<UInt16>.size)
+        var headerLen = UInt16(header.count)
+        withUnsafePointer(to: &headerLen) { p in
+            p.withMemoryRebound(to: UInt8.self, capacity: MemoryLayout<UInt16>.size) {
+                data.append($0, count: MemoryLayout<UInt16>.size)
+            }
         }
     }
+    
     
     data.append(header)
     data.append(npy.elementsData)
