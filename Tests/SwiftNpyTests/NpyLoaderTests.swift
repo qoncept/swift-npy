@@ -7,7 +7,6 @@ class NpyLoaderTests: XCTestCase {
         do {
             let npy: Npy = try! load(data: b1)
             XCTAssertEqual(npy.shape, [2])
-            XCTAssertTrue(npy.isLittleEndian)
             let elements: [Bool] = npy.elements()
             XCTAssertEqual(elements, [true, false])
         }
@@ -17,56 +16,48 @@ class NpyLoaderTests: XCTestCase {
         do {
             let npy: Npy = try! load(data: u1)
             XCTAssertEqual(npy.shape, [2, 3])
-            XCTAssertTrue(npy.isLittleEndian)
             let elements: [UInt8] = npy.elements()
             XCTAssertEqual(elements, [253, 254, 255, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: u1)
             XCTAssertEqual(npy.shape, [2, 3])
-            XCTAssertTrue(npy.isLittleEndian)
             let elements: [UInt] = npy.elements()
             XCTAssertEqual(elements, [253, 254, 255, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: u2)
             XCTAssertEqual(npy.shape, [3, 2])
-            XCTAssertFalse(npy.isLittleEndian)
             let elements: [UInt16] = npy.elements()
             XCTAssertEqual(elements, [65533, 65534,65535, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: u2)
             XCTAssertEqual(npy.shape, [3, 2])
-            XCTAssertFalse(npy.isLittleEndian)
             let elements: [UInt] = npy.elements()
             XCTAssertEqual(elements, [65533, 65534,65535, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: u4)
             XCTAssertEqual(npy.shape, [3, 2])
-            XCTAssertTrue(npy.isLittleEndian)
             let elements: [UInt32] = npy.elements()
             XCTAssertEqual(elements, [4294967293, 4294967294,4294967295, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: u4)
             XCTAssertEqual(npy.shape, [3, 2])
-            XCTAssertTrue(npy.isLittleEndian)
             let elements: [UInt] = npy.elements()
             XCTAssertEqual(elements, [4294967293, 4294967294,4294967295, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: u8)
             XCTAssertEqual(npy.shape, [2, 3])
-            XCTAssertFalse(npy.isLittleEndian)
             let elements: [UInt64] = npy.elements()
             XCTAssertEqual(elements, [18446744073709551613, 18446744073709551614, 18446744073709551615, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: u8)
             XCTAssertEqual(npy.shape, [2, 3])
-            XCTAssertFalse(npy.isLittleEndian)
             let elements: [UInt] = npy.elements()
             XCTAssertEqual(elements, [18446744073709551613, 18446744073709551614, 18446744073709551615, 0, 1, 2])
         }
@@ -76,56 +67,48 @@ class NpyLoaderTests: XCTestCase {
         do {
             let npy: Npy = try! load(data: i1)
             XCTAssertEqual(npy.shape, [2, 3])
-            XCTAssertTrue(npy.isLittleEndian)
             let elements: [Int8] = npy.elements()
             XCTAssertEqual(elements, [-3, -2, -1, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: i1)
             XCTAssertEqual(npy.shape, [2, 3])
-            XCTAssertTrue(npy.isLittleEndian)
             let elements: [Int] = npy.elements()
             XCTAssertEqual(elements, [-3, -2, -1, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: i2)
             XCTAssertEqual(npy.shape, [2, 3])
-            XCTAssertTrue(npy.isLittleEndian)
             let elements: [Int16] = npy.elements()
             XCTAssertEqual(elements, [-3, -2, -1, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: i2)
             XCTAssertEqual(npy.shape, [2, 3])
-            XCTAssertTrue(npy.isLittleEndian)
             let elements: [Int] = npy.elements()
             XCTAssertEqual(elements, [-3, -2, -1, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: i4)
             XCTAssertEqual(npy.shape, [3, 2])
-            XCTAssertFalse(npy.isLittleEndian)
             let elements: [Int32] = npy.elements()
             XCTAssertEqual(elements, [-3, -2, -1, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: i4)
             XCTAssertEqual(npy.shape, [3, 2])
-            XCTAssertFalse(npy.isLittleEndian)
             let elements: [Int] = npy.elements()
             XCTAssertEqual(elements, [-3, -2, -1, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: i8)
             XCTAssertEqual(npy.shape, [3, 2, 1])
-            XCTAssertFalse(npy.isLittleEndian)
             let elements: [Int64] = npy.elements()
             XCTAssertEqual(elements, [-3, -2, -1, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: i8)
             XCTAssertEqual(npy.shape, [3, 2, 1])
-            XCTAssertFalse(npy.isLittleEndian)
             let elements: [Int] = npy.elements()
             XCTAssertEqual(elements, [-3, -2, -1, 0, 1, 2])
         }
@@ -135,14 +118,12 @@ class NpyLoaderTests: XCTestCase {
         do {
             let npy: Npy = try! load(data: f4)
             XCTAssertEqual(npy.shape, [1, 1, 6])
-            XCTAssertTrue(npy.isLittleEndian)
             let elements: [Float] = npy.elements()
             XCTAssertEqual(elements, [-3, -2, -1, 0, 1, 2])
         }
         do {
             let npy: Npy = try! load(data: f8)
             XCTAssertEqual(npy.shape, [1, 6, 1])
-            XCTAssertFalse(npy.isLittleEndian)
             let elements: [Double] = npy.elements()
             XCTAssertEqual(elements, [-3, -2, -1, 0, 1, 2])
         }
@@ -153,14 +134,12 @@ class NpyLoaderTests: XCTestCase {
         do {
             let npy: Npy = try! load(data: f8_empty)
             XCTAssertEqual(npy.shape, [0])
-            XCTAssertTrue(npy.isLittleEndian)
             let elements: [Double] = npy.elements()
             XCTAssertEqual(elements, [])
         }
         do {
             let npy: Npy = try! load(data: i8_scalar)
             XCTAssertEqual(npy.shape, [])
-            XCTAssertTrue(npy.isLittleEndian)
             let elements: [Int] = npy.elements()
             XCTAssertEqual(elements, [3])
         }

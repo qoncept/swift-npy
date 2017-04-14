@@ -6,25 +6,35 @@ let MAGIC_PREFIX = "\u{93}NUMPY"
 struct NpyHeader {
     let shape: [Int]
     let dataType: DataType
-    let isLittleEndian: Bool
+    let endian: Endian
     let isFortranOrder: Bool
     let descr: String
     
-    init(shape: [Int], dataType: DataType, isLittleEndian: Bool, isFortranOrder: Bool, descr: String) {
+    init(shape: [Int], dataType: DataType, endian: Endian, isFortranOrder: Bool, descr: String) {
         self.shape = shape
         self.dataType = dataType
-        self.isLittleEndian = isLittleEndian
+        self.endian = endian
         self.isFortranOrder = isFortranOrder
         self.descr = descr
     }
     
-    init(shape: [Int], dataType: DataType, isLittleEndian: Bool, isFortranOrder: Bool) {
-        let descr = "'" + (isLittleEndian ? "<" : ">") + dataType.rawValue + "'"
+    init(shape: [Int], dataType: DataType, endian: Endian, isFortranOrder: Bool) {
+        let descr = "'" + endian.rawValue + dataType.rawValue + "'"
         self.init(shape: shape,
                   dataType: dataType,
-                  isLittleEndian: isLittleEndian,
+                  endian: endian,
                   isFortranOrder: isFortranOrder,
                   descr: descr)
+    }
+}
+
+public enum Endian: String {
+    case host = "|"
+    case big = ">"
+    case little = "<"
+    
+    static var all: [Endian] {
+        return [.host, .big, .little]
     }
 }
 
@@ -35,7 +45,7 @@ func parseHeader(_ data: Data) throws -> NpyHeader {
     }
     
     let descr: String
-    let isLittleEndian: Bool
+    let endian: Endian
     let dataType: DataType
     let isFortranOrder: Bool
     do {
@@ -46,7 +56,10 @@ func parseHeader(_ data: Data) throws -> NpyHeader {
         }
         descr = separate[descrIndex + 1]
         
-        isLittleEndian = descr.contains("<") || descr.contains("|")
+        guard let e = Endian.all.filter({ descr.contains($0.rawValue) }).first else {
+            throw NpyLoaderError.ParseFailed(message: "Unknown endian")
+        }
+        endian = e
         
         guard let dt = DataType.all.filter({ descr.contains($0.rawValue) }).first else {
             fatalError("Unsupported dtype: \(descr)")
@@ -82,7 +95,7 @@ func parseHeader(_ data: Data) throws -> NpyHeader {
     
     return NpyHeader(shape: shape,
                      dataType: dataType,
-                     isLittleEndian: isLittleEndian,
+                     endian: endian,
                      isFortranOrder: isFortranOrder,
                      descr: descr)
 }

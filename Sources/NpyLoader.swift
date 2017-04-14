@@ -62,23 +62,32 @@ public enum NpyLoaderError: Error {
 
 protocol MultiByteUInt {
     init(bigEndian: Self)
+    init(littleEndian: Self)
 }
 extension UInt16: MultiByteUInt {}
 extension UInt32: MultiByteUInt {}
 extension UInt64: MultiByteUInt {}
 
-func loadUInts<T: MultiByteUInt>(data: Data, count: Int, isLittleEndian: Bool) -> [T] {
-    if isLittleEndian || T.self is UInt8.Type {
+func loadUInts<T: MultiByteUInt>(data: Data, count: Int, endian: Endian) -> [T] {
+    
+    switch endian {
+    case .host:
         let uints = data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
             ptr.withMemoryRebound(to: T.self, capacity: count) { ptr2 in
                 [T](UnsafeBufferPointer(start: ptr2, count: count))
             }
         }
         return uints
-    } else {
+    case .big:
         return data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
             ptr.withMemoryRebound(to: T.self, capacity: count) { ptr2 in
                 (0..<count).map { T(bigEndian: ptr2.advanced(by: $0).pointee) }
+            }
+        }
+    case .little:
+        return data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+            ptr.withMemoryRebound(to: T.self, capacity: count) { ptr2 in
+                (0..<count).map { T(littleEndian: ptr2.advanced(by: $0).pointee) }
             }
         }
     }

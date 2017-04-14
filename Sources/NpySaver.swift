@@ -41,34 +41,43 @@ public func format(npy: Npy) -> Data {
     return data
 }
 
-func toData(elements: [UInt16], isLittleEndian: Bool) -> Data {
+func toData(elements: [UInt16], endian: Endian) -> Data {
     let uints: [UInt16]
-    if isLittleEndian {
-        uints =  elements.map(CFSwapInt16HostToLittle)
-    } else {
+    switch endian {
+    case .host:
+        uints = elements
+    case .big:
         uints = elements.map(CFSwapInt16HostToBig)
+    case .little:
+        uints =  elements.map(CFSwapInt16HostToLittle)
     }
     let count = MemoryLayout<UInt16>.size * elements.count
     return Data(bytes: uints, count: count)
 }
 
-func toData(elements: [UInt32], isLittleEndian: Bool) -> Data {
+func toData(elements: [UInt32], endian: Endian) -> Data {
     let uints: [UInt32]
-    if isLittleEndian {
-        uints =  elements.map(CFSwapInt32HostToLittle)
-    } else {
+    switch endian {
+    case .host:
+        uints = elements
+    case .big:
         uints = elements.map(CFSwapInt32HostToBig)
+    case .little:
+        uints =  elements.map(CFSwapInt32HostToLittle)
     }
     let count = MemoryLayout<UInt32>.size * elements.count
     return Data(bytes: uints, count: count)
 }
 
-func toData(elements: [UInt64], isLittleEndian: Bool) -> Data {
+func toData(elements: [UInt64], endian: Endian) -> Data {
     let uints: [UInt64]
-    if isLittleEndian {
-        uints = elements.map(CFSwapInt64HostToLittle)
-    } else {
+    switch endian {
+    case .host:
+        uints = elements
+    case .big:
         uints = elements.map(CFSwapInt64HostToBig)
+    case .little:
+        uints =  elements.map(CFSwapInt64HostToLittle)
     }
     let count = MemoryLayout<UInt64>.size * elements.count
     return Data(bytes: uints, count: count)
