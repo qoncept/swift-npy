@@ -2,7 +2,7 @@
 import Foundation
 
 public struct Npz {
-    private let dict: [String: Npy]
+    let dict: [String: Npy]
     
     public init(dict: [String: Npy]) {
         var npyDict = [String:Npy]()
