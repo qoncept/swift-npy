@@ -28,13 +28,15 @@ struct NpyHeader {
     }
 }
 
+// https://docs.scipy.org/doc/numpy/reference/generated/numpy.dtype.byteorder.html
 public enum Endian: String {
-    case host = "|"
+    case host = "="
     case big = ">"
     case little = "<"
+    case na = "|"
     
     static var all: [Endian] {
-        return [.host, .big, .little]
+        return [.host, .big, .little, .na]
     }
 }
 

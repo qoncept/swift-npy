@@ -34,14 +34,14 @@ public struct Npy {
 extension Npy {
     public init(shape: [Int], elements: [Bool], isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        let header = NpyHeader(shape: shape, dataType: .bool, endian: .host, isFortranOrder: isFortranOrder)
+        let header = NpyHeader(shape: shape, dataType: .bool, endian: .na, isFortranOrder: isFortranOrder)
         let data = Data(elements.map { $0 ? 0x01 : 0x00 })
         self.init(header: header, elementsData: data)
     }
     
     public init(shape: [Int], elements: [UInt8], isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        let header = NpyHeader(shape: shape, dataType: .uint8, endian: .host, isFortranOrder: isFortranOrder)
+        let header = NpyHeader(shape: shape, dataType: .uint8, endian: .na, isFortranOrder: isFortranOrder)
         let data = Data(elements)
         self.init(header: header, elementsData: data)
     }
@@ -70,7 +70,7 @@ extension Npy {
     
     public init(shape: [Int], elements: [Int8], isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        let header = NpyHeader(shape: shape, dataType: .int8, endian: .host, isFortranOrder: isFortranOrder)
+        let header = NpyHeader(shape: shape, dataType: .int8, endian: .na, isFortranOrder: isFortranOrder)
         let uints = elements.map { UInt8(bitPattern: $0) }
         let data = Data(uints)
         self.init(header: header, elementsData: data)

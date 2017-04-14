@@ -50,6 +50,8 @@ func toData(elements: [UInt16], endian: Endian) -> Data {
         uints = elements.map(CFSwapInt16HostToBig)
     case .little:
         uints =  elements.map(CFSwapInt16HostToLittle)
+    case .na:
+        fatalError("Invalid byteorder.")
     }
     let count = MemoryLayout<UInt16>.size * elements.count
     return Data(bytes: uints, count: count)
@@ -64,6 +66,8 @@ func toData(elements: [UInt32], endian: Endian) -> Data {
         uints = elements.map(CFSwapInt32HostToBig)
     case .little:
         uints =  elements.map(CFSwapInt32HostToLittle)
+    case .na:
+        fatalError("Invalid byteorder.")
     }
     let count = MemoryLayout<UInt32>.size * elements.count
     return Data(bytes: uints, count: count)
@@ -78,6 +82,8 @@ func toData(elements: [UInt64], endian: Endian) -> Data {
         uints = elements.map(CFSwapInt64HostToBig)
     case .little:
         uints =  elements.map(CFSwapInt64HostToLittle)
+    case .na:
+        fatalError("Invalid byteorder.")
     }
     let count = MemoryLayout<UInt64>.size * elements.count
     return Data(bytes: uints, count: count)

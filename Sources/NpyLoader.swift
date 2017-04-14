@@ -90,6 +90,8 @@ func loadUInts<T: MultiByteUInt>(data: Data, count: Int, endian: Endian) -> [T] 
                 (0..<count).map { T(littleEndian: ptr2.advanced(by: $0).pointee) }
             }
         }
+    case .na:
+        fatalError("Invalid byteorder.")
     }
 }
 
