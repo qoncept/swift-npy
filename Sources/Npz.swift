@@ -4,8 +4,17 @@ import Foundation
 public struct Npz {
     private let dict: [String: Npy]
     
-    init(dict: [String: Npy]) {
-        self.dict = dict
+    public init(dict: [String: Npy]) {
+        var npyDict = [String:Npy]()
+        for (k, v) in dict {
+            if k.hasSuffix(".npy") {
+                npyDict[k] = v
+            } else {
+                npyDict[k+".npy"] = v
+            }
+        }
+        
+        self.dict = npyDict
     }
     
     public var keys: [String] {
