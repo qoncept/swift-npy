@@ -9,6 +9,23 @@ struct NpyHeader {
     let isLittleEndian: Bool
     let isFortranOrder: Bool
     let descr: String
+    
+    init(shape: [Int], dataType: DataType, isLittleEndian: Bool, isFortranOrder: Bool, descr: String) {
+        self.shape = shape
+        self.dataType = dataType
+        self.isLittleEndian = isLittleEndian
+        self.isFortranOrder = isFortranOrder
+        self.descr = descr
+    }
+    
+    public init(shape: [Int], dataType: DataType, isLittleEndian: Bool, isFortranOrder: Bool) {
+        let descr = "'" + (isLittleEndian ? "<" : ">") + dataType.rawValue + "'"
+        self.init(shape: shape,
+                  dataType: dataType,
+                  isLittleEndian: isLittleEndian,
+                  isFortranOrder: isFortranOrder,
+                  descr: descr)
+    }
 }
 
 func parseHeader(_ data: Data) throws -> NpyHeader {
@@ -68,4 +85,20 @@ func parseHeader(_ data: Data) throws -> NpyHeader {
                      isLittleEndian: isLittleEndian,
                      isFortranOrder: isFortranOrder,
                      descr: descr)
+}
+
+func encodeHeader(_ header: NpyHeader) -> Data {
+    let fortran_order = header.isFortranOrder ? "True" : "False"
+    let shape: String
+    switch header.shape.count {
+    case 0:
+        shape = "()"
+    case 1:
+        shape = "(\(header.shape[0]),)"
+    default:
+        shape = "(" + header.shape.map(String.init).joined(separator: ", ") + ")"
+    }
+    
+    let str = "{ 'descr': \(header.descr), 'fortran_order': \(fortran_order), 'shape': \(shape), }"
+    return str.data(using: .ascii)!
 }

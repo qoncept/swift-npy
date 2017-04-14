@@ -2,8 +2,8 @@ import Foundation
 
 public struct Npy {
     
-    private let header: NpyHeader
-    private let elementsData: Data
+    let header: NpyHeader
+    let elementsData: Data
     
     public var shape: [Int] {
         return header.shape
