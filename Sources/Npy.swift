@@ -34,91 +34,91 @@ public struct Npy {
 extension Npy {
     public init(shape: [Int], elements: [Bool], isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        self.header = NpyHeader(shape: shape, dataType: .bool, endian: .host, isFortranOrder: isFortranOrder)
-        
-        self.elementsData = Data(elements.map { $0 ? 0x01 : 0x00 })
+        let header = NpyHeader(shape: shape, dataType: .bool, endian: .host, isFortranOrder: isFortranOrder)
+        let data = Data(elements.map { $0 ? 0x01 : 0x00 })
+        self.init(header: header, elementsData: data)
     }
     
     public init(shape: [Int], elements: [UInt8], isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        self.header = NpyHeader(shape: shape, dataType: .uint8, endian: .host, isFortranOrder: isFortranOrder)
-        
-        self.elementsData = Data(elements)
+        let header = NpyHeader(shape: shape, dataType: .uint8, endian: .host, isFortranOrder: isFortranOrder)
+        let data = Data(elements)
+        self.init(header: header, elementsData: data)
     }
     
     public init(shape: [Int], elements: [UInt16], endian: Endian, isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        self.header = NpyHeader(shape: shape, dataType: .uint16, endian: endian, isFortranOrder: isFortranOrder)
-        
-        self.elementsData = toData(elements: elements, endian: header.endian)
+        let header = NpyHeader(shape: shape, dataType: .uint16, endian: endian, isFortranOrder: isFortranOrder)
+        let data = toData(elements: elements, endian: header.endian)
+        self.init(header: header, elementsData: data)
         
     }
     
     public init(shape: [Int], elements: [UInt32], endian: Endian, isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        self.header = NpyHeader(shape: shape, dataType: .uint32, endian: endian, isFortranOrder: isFortranOrder)
-        
-        self.elementsData = toData(elements: elements, endian: header.endian)
+        let header = NpyHeader(shape: shape, dataType: .uint32, endian: endian, isFortranOrder: isFortranOrder)
+        let data = toData(elements: elements, endian: header.endian)
+        self.init(header: header, elementsData: data)
     }
     
     public init(shape: [Int], elements: [UInt64], endian: Endian, isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        self.header = NpyHeader(shape: shape, dataType: .uint64, endian: endian, isFortranOrder: isFortranOrder)
-        
-        self.elementsData = toData(elements: elements, endian: header.endian)
+        let header = NpyHeader(shape: shape, dataType: .uint64, endian: endian, isFortranOrder: isFortranOrder)
+        let data = toData(elements: elements, endian: header.endian)
+        self.init(header: header, elementsData: data)
     }
     
     public init(shape: [Int], elements: [Int8], isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        self.header = NpyHeader(shape: shape, dataType: .int8, endian: .host, isFortranOrder: isFortranOrder)
-        
+        let header = NpyHeader(shape: shape, dataType: .int8, endian: .host, isFortranOrder: isFortranOrder)
         let uints = elements.map { UInt8(bitPattern: $0) }
-        self.elementsData = Data(uints)
+        let data = Data(uints)
+        self.init(header: header, elementsData: data)
     }
     
     public init(shape: [Int], elements: [Int16], endian: Endian, isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        self.header = NpyHeader(shape: shape, dataType: .int16, endian: endian, isFortranOrder: isFortranOrder)
-
+        let header = NpyHeader(shape: shape, dataType: .int16, endian: endian, isFortranOrder: isFortranOrder)
         let uints = elements.map { UInt16(bitPattern: $0) }
-        self.elementsData = toData(elements: uints,
+        let data = toData(elements: uints,
                                    endian: header.endian)
+        self.init(header: header, elementsData: data)
     }
     
     public init(shape: [Int], elements: [Int32], endian: Endian, isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        self.header = NpyHeader(shape: shape, dataType: .int32, endian: endian, isFortranOrder: isFortranOrder)
-        
+        let header = NpyHeader(shape: shape, dataType: .int32, endian: endian, isFortranOrder: isFortranOrder)
         let uints = elements.map { UInt32(bitPattern: $0) }
-        self.elementsData = toData(elements: uints,
+        let data = toData(elements: uints,
                                    endian: header.endian)
+        self.init(header: header, elementsData: data)
     }
     
     public init(shape: [Int], elements: [Int64], endian: Endian, isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        self.header = NpyHeader(shape: shape, dataType: .int64, endian: endian, isFortranOrder: isFortranOrder)
-        
+        let header = NpyHeader(shape: shape, dataType: .int64, endian: endian, isFortranOrder: isFortranOrder)
         let uints = elements.map { UInt64(bitPattern: $0) }
-        self.elementsData = toData(elements: uints,
+        let data = toData(elements: uints,
                                    endian: header.endian)
+        self.init(header: header, elementsData: data)
     }
     
     public init(shape: [Int], elements: [Float], endian: Endian, isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        self.header = NpyHeader(shape: shape, dataType: .float32, endian: endian, isFortranOrder: isFortranOrder)
-        
+        let header = NpyHeader(shape: shape, dataType: .float32, endian: endian, isFortranOrder: isFortranOrder)
         let uints = elements.map { $0.bitPattern }
-        self.elementsData = toData(elements: uints,
+        let data = toData(elements: uints,
                                    endian: header.endian)
+        self.init(header: header, elementsData: data)
     }
     
     public init(shape: [Int], elements: [Double], endian: Endian, isFortranOrder: Bool) {
         precondition(shape.reduce(1, *) == elements.count)
-        self.header = NpyHeader(shape: shape, dataType: .float64, endian: endian, isFortranOrder: isFortranOrder)
-        
+        let header = NpyHeader(shape: shape, dataType: .float64, endian: endian, isFortranOrder: isFortranOrder)
         let uints = elements.map { $0.bitPattern }
-        self.elementsData = toData(elements: uints,
+        let data = toData(elements: uints,
                                    endian: header.endian)
+        self.init(header: header, elementsData: data)
     }
 }
 
