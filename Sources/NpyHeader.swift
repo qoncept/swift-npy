@@ -18,7 +18,7 @@ struct NpyHeader {
         self.descr = descr
     }
     
-    public init(shape: [Int], dataType: DataType, isLittleEndian: Bool, isFortranOrder: Bool) {
+    init(shape: [Int], dataType: DataType, isLittleEndian: Bool, isFortranOrder: Bool) {
         let descr = "'" + (isLittleEndian ? "<" : ">") + dataType.rawValue + "'"
         self.init(shape: shape,
                   dataType: dataType,

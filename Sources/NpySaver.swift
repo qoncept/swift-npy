@@ -40,3 +40,36 @@ public func format(npy: Npy) -> Data {
     
     return data
 }
+
+func toData(elements: [UInt16], isLittleEndian: Bool) -> Data {
+    let uints: [UInt16]
+    if isLittleEndian {
+        uints =  elements.map(CFSwapInt16HostToLittle)
+    } else {
+        uints = elements.map(CFSwapInt16HostToBig)
+    }
+    let count = MemoryLayout<UInt16>.size * elements.count
+    return Data(bytes: uints, count: count)
+}
+
+func toData(elements: [UInt32], isLittleEndian: Bool) -> Data {
+    let uints: [UInt32]
+    if isLittleEndian {
+        uints =  elements.map(CFSwapInt32HostToLittle)
+    } else {
+        uints = elements.map(CFSwapInt32HostToBig)
+    }
+    let count = MemoryLayout<UInt32>.size * elements.count
+    return Data(bytes: uints, count: count)
+}
+
+func toData(elements: [UInt64], isLittleEndian: Bool) -> Data {
+    let uints: [UInt64]
+    if isLittleEndian {
+        uints = elements.map(CFSwapInt64HostToLittle)
+    } else {
+        uints = elements.map(CFSwapInt64HostToBig)
+    }
+    let count = MemoryLayout<UInt64>.size * elements.count
+    return Data(bytes: uints, count: count)
+}
