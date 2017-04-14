@@ -1,6 +1,8 @@
 
 import Foundation
 
+// https://docs.scipy.org/doc/numpy-dev/neps/npy-format.html
+
 public func load(contentsOf url: URL) throws -> Npy {
     let data = try Data(contentsOf: url)
     return try load(data: data)
