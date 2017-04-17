@@ -12,7 +12,7 @@ try save(npy: npy, to: url)
 ```swift
 let npz = try load(contentsOf: npzUrl)
 let npy = npz["name-of-array"]
-try save(npz: npz to: url)
+try save(npz: npz, to: url)
 ```
 
 ## Suppoted format
