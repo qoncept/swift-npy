@@ -123,13 +123,13 @@ extension Npy {
 }
 
 extension Npy {
-    public func elements() -> [Bool] {
+    public func elements(_ type: Bool.Type = Bool.self) -> [Bool] {
         precondition(dataType == .bool)
         let uints = loadUInt8s(data: elementsData, count: elementsCount)
         return uints.map { $0 != 0 }
     }
     
-    public func elements() -> [UInt] {
+    public func elements(_ type: UInt.Type = UInt.self) -> [UInt] {
         switch dataType {
         case .uint8:
             let uints = loadUInt8s(data: elementsData, count: elementsCount)
@@ -148,31 +148,31 @@ extension Npy {
         }
     }
     
-    public func elements() -> [UInt8] {
+    public func elements(_ type: UInt8.Type = UInt8.self) -> [UInt8] {
         precondition(dataType == .uint8)
         let uints = loadUInt8s(data: elementsData, count: elementsCount)
         return uints
     }
     
-    public func elements() -> [UInt16] {
+    public func elements(_ type: UInt16.Type = UInt16.self) -> [UInt16] {
         precondition(dataType == .uint16)
         let uints: [UInt16] = loadUInts(data: elementsData, count: elementsCount, endian: endian)
         return uints
     }
     
-    public func elements() -> [UInt32] {
+    public func elements(_ type: UInt32.Type = UInt32.self) -> [UInt32] {
         precondition(dataType == .uint32)
         let uints: [UInt32] = loadUInts(data: elementsData, count: elementsCount, endian: endian)
         return uints
     }
     
-    public func elements() -> [UInt64] {
+    public func elements(_ type: UInt64.Type = UInt64.self) -> [UInt64] {
         precondition(dataType == .uint64)
         let uints: [UInt64] = loadUInts(data: elementsData, count: elementsCount, endian: endian)
         return uints
     }
     
-    public func elements() -> [Int] {
+    public func elements(_ type: Int.Type = Int.self) -> [Int] {
         switch dataType {
         case .int8:
             let uints = loadUInt8s(data: elementsData, count: elementsCount)
@@ -191,37 +191,37 @@ extension Npy {
         }
     }
     
-    public func elements() -> [Int8] {
+    public func elements(_ type: Int8.Type = Int8.self) -> [Int8] {
         precondition(dataType == .int8)
         let uints = loadUInt8s(data: elementsData, count: elementsCount)
         return uints.map { Int8(bitPattern: $0) }
     }
     
-    public func elements() -> [Int16] {
+    public func elements(_ type: Int16.Type = Int16.self) -> [Int16] {
         precondition(dataType == .int16)
         let uints: [UInt16] = loadUInts(data: elementsData, count: elementsCount, endian: endian)
         return uints.map { Int16(bitPattern: $0) }
     }
     
-    public func elements() -> [Int32] {
+    public func elements(_ type: Int32.Type = Int32.self) -> [Int32] {
         precondition(dataType == .int32)
         let uints: [UInt32] = loadUInts(data: elementsData, count: elementsCount, endian: endian)
         return uints.map { Int32(bitPattern: $0) }
     }
     
-    public func elements() -> [Int64] {
+    public func elements(_ type: Int64.Type = Int64.self) -> [Int64] {
         precondition(dataType == .int64)
         let uints: [UInt64] = loadUInts(data: elementsData, count: elementsCount, endian: endian)
         return uints.map { Int64(bitPattern: $0) }
     }
     
-    public func elements() -> [Float] {
+    public func elements(_ type: Float.Type = Float.self) -> [Float] {
         precondition(dataType == .float32)
         let uints: [UInt32] = loadUInts(data: elementsData, count: elementsCount, endian: endian)
         return uints.map { Float(bitPattern: $0) }
     }
     
-    public func elements() -> [Double] {
+    public func elements(_ type: Double.Type = Double.self) -> [Double] {
         precondition(dataType == .float64)
         let uints: [UInt64] = loadUInts(data: elementsData, count: elementsCount, endian: endian)
         return uints.map { Double(bitPattern: $0) }

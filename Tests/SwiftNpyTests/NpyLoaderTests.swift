@@ -28,7 +28,7 @@ class NpyLoaderTests: XCTestCase {
         do {
             let npy: Npy = try! Npy(data: u2)
             XCTAssertEqual(npy.shape, [3, 2])
-            let elements: [UInt16] = npy.elements()
+            let elements = npy.elements(UInt16.self)
             XCTAssertEqual(elements, [65533, 65534,65535, 0, 1, 2])
         }
         do {
