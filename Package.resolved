@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SwiftZip",
+        "repositoryURL": "https://github.com/qoncept/swift-zip.git",
+        "state": {
+          "branch": null,
+          "revision": "a2db547b32d1cfd3539df2688efc6e08b53f14d3",
+          "version": "0.0.4"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

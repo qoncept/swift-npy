@@ -5,7 +5,7 @@ import XCTest
 class NpzSaverTests: XCTestCase {
 
     func testFormat() {
-        let npz1: Npz = try! load(data: npz)
+        let npz1: Npz = try! Npz(data: npz)
         
         let a1: Npy = npz1["a"]!
         let a1Elements: [Int] = a1.elements()
@@ -14,7 +14,7 @@ class NpzSaverTests: XCTestCase {
         
         let data = format(npz: npz1)
         
-        let npz2: Npz = try! load(data: data)
+        let npz2: Npz = try! Npz(data: data)
         
         XCTAssertEqual(Set(npz2.keys), Set(npz1.keys))
         

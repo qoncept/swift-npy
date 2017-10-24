@@ -4,7 +4,7 @@ import XCTest
 
 class NpzLoaderTests: XCTestCase {
     func testLoadNpz() {
-        let npzData: Npz = try! load(data: npz)
+        let npzData: Npz = try! Npz(data: npz)
         
         XCTAssertEqual(Set(npzData.keys), ["a", "b"])
         let a: Npy = npzData["a"]!

@@ -82,7 +82,7 @@ func parseHeader(_ data: Data) throws -> NpyHeader {
                 throw NpyLoaderError.ParseFailed(message: "Shape not found in header.")
         }
         
-        let substr = str.substring(with: left.upperBound..<right.lowerBound)
+        let substr = str[left.upperBound..<right.lowerBound]
         
         let strs = substr.replacingOccurrences(of: " ", with: "")
             .components(separatedBy: ",")
