@@ -3,7 +3,7 @@ import Foundation
 import SwiftZip
 
 extension Npz {
-    public func save(npz: Npz, to url: URL) throws {
+    public func save(to url: URL) throws {
         let data = self.format()
         try data.write(to: url)
     }
