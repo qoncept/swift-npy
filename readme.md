@@ -2,7 +2,7 @@
 Save/Load NumPy array files in Swift
 
 ```swift
-let npy = try load(contentsOf: npyUrl)
+let npy = try Npy(contentsOf: npyUrl)
 let shape = npy.shape
 let elements: [Float] = npy.elements()
 let isFortranOrder = npy.isFortranOrder
@@ -10,7 +10,7 @@ try save(npy: npy, to: url)
 ```
 
 ```swift
-let npz = try load(contentsOf: npzUrl)
+let npz = try Npy(contentsOf: npzUrl)
 let npy = npz["name-of-array"]
 try save(npz: npz, to: url)
 ```

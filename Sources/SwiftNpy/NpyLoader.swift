@@ -4,12 +4,12 @@ import Foundation
 // https://docs.scipy.org/doc/numpy-dev/neps/npy-format.html
 
 extension Npy {
-    init(contentsOf url: URL) throws {
+    public init(contentsOf url: URL) throws {
         let data = try Data(contentsOf: url)
         try self.init(data: data)
     }
     
-    init(data: Data) throws {
+    public init(data: Data) throws {
         guard let magic = String(data: data.subdata(in: 0..<6), encoding: .ascii) else {
             throw NpyLoaderError.ParseFailed(message: "Can't parse prefix")
         }

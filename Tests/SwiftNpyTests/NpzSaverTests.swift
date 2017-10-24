@@ -1,6 +1,6 @@
 
 import XCTest
-@testable import SwiftNpy
+import SwiftNpy
 
 class NpzSaverTests: XCTestCase {
 
@@ -12,7 +12,7 @@ class NpzSaverTests: XCTestCase {
         let b1: Npy = npz1["b"]!
         let b1Elements: [Int] = b1.elements()
         
-        let data = format(npz: npz1)
+        let data = npz1.format()
         
         let npz2: Npz = try! Npz(data: data)
         

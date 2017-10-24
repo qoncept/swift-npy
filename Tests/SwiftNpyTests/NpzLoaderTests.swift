@@ -1,6 +1,6 @@
 
 import XCTest
-@testable import SwiftNpy
+import SwiftNpy
 
 class NpzLoaderTests: XCTestCase {
     func testLoadNpz() {

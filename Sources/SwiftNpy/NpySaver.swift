@@ -1,50 +1,51 @@
 
 import Foundation
 
-public func save(npy: Npy, to url: URL) throws {
-    let data = format(npy: npy)
-    try data.write(to: url)
-}
-
-public func format(npy: Npy) -> Data {
-    
-    var data = Data()
-    
-    let magic = MAGIC_PREFIX.unicodeScalars.map { c -> UInt8 in
-        return UInt8(c.value)
+extension Npy {
+    public func save(to url: URL) throws {
+        let data = self.format()
+        try data.write(to: url)
     }
     
-    data.append(contentsOf: magic)
-    
-    let header = encodeHeader(npy.header)
-    
-    if header.count > 65535 {
-        // v2
-        data.append(0x02)
-        data.append(0x00)
-        var headerLen = UInt32(header.count).littleEndian
-        withUnsafePointer(to: &headerLen) { p in
-            p.withMemoryRebound(to: UInt8.self, capacity: MemoryLayout<UInt32>.size) {
-                data.append($0, count: MemoryLayout<UInt32>.size)
+    public func format() -> Data {
+        var data = Data()
+        
+        let magic = MAGIC_PREFIX.unicodeScalars.map { c -> UInt8 in
+            return UInt8(c.value)
+        }
+        
+        data.append(contentsOf: magic)
+        
+        let header = encodeHeader(self.header)
+        
+        if header.count > 65535 {
+            // v2
+            data.append(0x02)
+            data.append(0x00)
+            var headerLen = UInt32(header.count).littleEndian
+            withUnsafePointer(to: &headerLen) { p in
+                p.withMemoryRebound(to: UInt8.self, capacity: MemoryLayout<UInt32>.size) {
+                    data.append($0, count: MemoryLayout<UInt32>.size)
+                }
+            }
+        } else {
+            // v1
+            data.append(0x01)
+            data.append(0x00)
+            var headerLen = UInt16(header.count).littleEndian
+            withUnsafePointer(to: &headerLen) { p in
+                p.withMemoryRebound(to: UInt8.self, capacity: MemoryLayout<UInt16>.size) {
+                    data.append($0, count: MemoryLayout<UInt16>.size)
+                }
             }
         }
-    } else {
-        // v1
-        data.append(0x01)
-        data.append(0x00)
-        var headerLen = UInt16(header.count).littleEndian
-        withUnsafePointer(to: &headerLen) { p in
-            p.withMemoryRebound(to: UInt8.self, capacity: MemoryLayout<UInt16>.size) {
-                data.append($0, count: MemoryLayout<UInt16>.size)
-            }
-        }
+        
+        
+        data.append(header)
+        data.append(self.elementsData)
+        
+        return data
     }
-    
-    
-    data.append(header)
-    data.append(npy.elementsData)
-    
-    return data
 }
 
 func toData(elements: [UInt16], endian: Endian) -> Data {

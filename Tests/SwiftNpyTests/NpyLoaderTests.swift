@@ -1,5 +1,5 @@
 import XCTest
-@testable import SwiftNpy
+import SwiftNpy
 
 class NpyLoaderTests: XCTestCase {
     
