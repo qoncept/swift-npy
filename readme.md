@@ -33,6 +33,9 @@ They also can be read as `Int`
 `Float`, `Double`
 
 ## License
+
+[The MIT License](https://github.com/qoncept/swift-npy/blob/master/LICENSE)
+
 - [zlib](https://github.com/madler/zlib)
 - [Minizip](https://github.com/nmoinvaz/minizip)
 
