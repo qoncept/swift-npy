@@ -1,6 +1,9 @@
 import XCTest
-@testable import numpy_array_loaderTests
+@testable import SwiftNpyTests
 
 XCTMain([
-    testCase(numpy_array_loaderTests.allTests),
+    testCase(NpyLoaderTests.allTests),
+    testCase(NpySaverTests.allTests),
+    testCase(NpzLoaderTests.allTests),
+    testCase(NpzSaverTests.allTests),
 ])

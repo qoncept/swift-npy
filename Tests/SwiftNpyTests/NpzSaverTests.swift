@@ -1,9 +1,7 @@
-
 import XCTest
 import SwiftNpy
 
 class NpzSaverTests: XCTestCase {
-
     func testFormat() {
         let npz1: Npz = try! Npz(data: npz)
         
@@ -26,4 +24,7 @@ class NpzSaverTests: XCTestCase {
         XCTAssertEqual(b2Elements, b1Elements)
     }
 
+    static var allTests = [
+        ("testFormat", testFormat),
+    ]
 }

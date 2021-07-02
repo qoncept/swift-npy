@@ -136,5 +136,16 @@ class NpySaverTests: XCTestCase {
         let e: [Double] = npy2.elements()
         XCTAssertEqual(e, elements)
     }
-
+    
+    static var allTests = [
+        ("testFormatB1", testFormatB1),
+        ("testFormatU1", testFormatU1),
+        ("testFormatU2", testFormatU2),
+        ("testFormatU4", testFormatU4),
+        ("testFormatU8", testFormatU8),
+        ("testFormatI1", testFormatI1),
+        ("testFormatI2", testFormatI2),
+        ("testFormatI4", testFormatI4),
+        ("testFormatI8", testFormatI8),
+    ]
 }

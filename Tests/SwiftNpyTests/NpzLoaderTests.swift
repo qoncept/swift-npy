@@ -16,6 +16,10 @@ class NpzLoaderTests: XCTestCase {
         let bElements: [Int] = b.elements()
         XCTAssertEqual(bElements, [0, 1, 2, 3])
     }
+    
+    static var allTests = [
+        ("testLoadNpz", testLoadNpz),
+    ]
 }
 
 
