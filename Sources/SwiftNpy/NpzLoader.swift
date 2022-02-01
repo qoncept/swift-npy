@@ -9,11 +9,14 @@ extension Npz {
     }
     
     public init(data: Data) throws {
-        let dataDict = unzip(data: data)
+        let source = try ZipSource(data: data)
+        let archive = try ZipArchive(source: source)
         
         var dict = [String: Npy]()
-        for k in dataDict.keys {
-            dict[k] = try Npy(data: dataDict[k]!)
+        for entry in archive.entries() {
+            let entryName = try entry.getName()
+            let entryData = try entry.data()
+            dict[entryName] = try Npy(data: entryData)
         }
         
         self.init(dict: dict)

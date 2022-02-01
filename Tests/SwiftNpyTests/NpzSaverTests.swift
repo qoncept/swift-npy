@@ -9,8 +9,11 @@ class NpzSaverTests: XCTestCase {
         let a1Elements: [Int] = a1.elements()
         let b1: Npy = npz1["b"]!
         let b1Elements: [Int] = b1.elements()
+
+        let tempURL = URL(fileURLWithPath: NSTemporaryDirectory() + "test.npz")
+        try! npz1.save(to: tempURL)
         
-        let data = npz1.format()
+        let data = try! Data(contentsOf: tempURL)
         
         let npz2: Npz = try! Npz(data: data)
         
