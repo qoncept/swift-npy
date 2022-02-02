@@ -35,9 +35,3 @@ They also can be read as `Int`
 ## License
 
 [The MIT License](https://github.com/qoncept/swift-npy/blob/master/LICENSE)
-
-- [zlib](https://github.com/madler/zlib)
-- [Minizip](https://github.com/nmoinvaz/minizip)
-
-are licenced under the [zlib license](http://www.zlib.net/zlib_license.html).
-
