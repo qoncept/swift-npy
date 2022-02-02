@@ -4,16 +4,13 @@ import SwiftZip
 
 extension Npz {
     public func save(to url: URL) throws {
-        let data = self.format()
-        try data.write(to: url)
-    }
-    
-    public func format() -> Data {
-        var entries = [String: Data]()
-        for (k, v) in dict {
-            entries[k] = v.format()
+        let archive = try ZipMutableArchive(url: url, flags: [.create, .truncate])
+        
+        for (name, npy) in dict {
+            let source = try ZipSource(data: npy.format())
+            try archive.addFile(name: name, source: source)
         }
-        return createZip(entries: entries)
+        
+        try archive.close()
     }
-
 }

@@ -10,12 +10,12 @@ try save(npy: npy, to: url)
 ```
 
 ```swift
-let npz = try Npy(contentsOf: npzUrl)
+let npz = try Npz(contentsOf: npzUrl)
 let npy = npz["name-of-array"]
-try save(npz: npz, to: url)
+try npz.save(to: url)
 ```
 
-## Suppoted format
+## Suppoted formats
 `npy`, `npz` files.
 
 ### Bool
