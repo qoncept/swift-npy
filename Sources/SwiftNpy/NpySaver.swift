@@ -10,11 +10,7 @@ extension Npy {
     public func format() -> Data {
         var data = Data()
         
-        let magic = MAGIC_PREFIX.unicodeScalars.map { c -> UInt8 in
-            return UInt8(c.value)
-        }
-        
-        data.append(contentsOf: magic)
+        data.append(contentsOf: MAGIC_PREFIX)
         
         let header = encodeHeader(self.header)
         

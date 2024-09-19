@@ -10,9 +10,7 @@ extension Npy {
     }
     
     public init(data: Data) throws {
-        guard let magic = String(data: data.subdata(in: 0..<6), encoding: .ascii) else {
-            throw NpyLoaderError.ParseFailed(message: "Can't parse prefix")
-        }
+        let magic = data.subdata(in: 0..<6)
         guard magic == MAGIC_PREFIX else {
             throw NpyLoaderError.ParseFailed(message: "Invalid prefix: \(magic)")
         }
