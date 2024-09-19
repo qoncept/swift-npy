@@ -1,7 +1,7 @@
 
 import Foundation
 
-let MAGIC_PREFIX = "\u{93}NUMPY"
+let MAGIC_PREFIX = Data([0x93]) + "NUMPY".data(using: .ascii)!
 
 struct NpyHeader {
     let shape: [Int]
